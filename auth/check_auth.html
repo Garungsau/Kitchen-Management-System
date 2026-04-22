@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kiểm tra đăng nhập</title>
+</head>
+<body>
+    <pre id="result">Đang kiểm tra phiên...</pre>
+    <script>
+    (async () => {
+        try {
+            const res = await fetch('../api/auth/check_auth.php', { credentials: 'include' });
+            const data = await res.json();
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            if (data.status !== 'success') {
+                setTimeout(() => window.location.replace('./login.html'), 800);
+            }
+        } catch (e) {
+            document.getElementById('result').textContent = 'Lỗi kiểm tra phiên';
+        }
+    })();
+    </script>
+</body>
+</html>

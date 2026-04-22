@@ -1,0 +1,35 @@
+{
+    "timestamp": "2026-03-24 18:54:35",
+    "actions": {
+        "auto_approve": "1 users approved",
+        "unblock": "No blocked users"
+    },
+    "data_populated": {
+        "wallets": "5,000,000 VND per student",
+        "today_menu": "Menu already exists",
+        "tomorrow_menu": "Menu already exists",
+        "meals": "3 meals registered",
+        "complaints": "Complaints already exist"
+    },
+    "database_integrity": {
+        "users": 12,
+        "students": 5,
+        "meal_attendance": 7,
+        "daily_menu": 6,
+        "transactions": 6
+    },
+    "test_accounts": {
+        "admin@cpc1.edu.vn": "❌ NOT FOUND",
+        "kitchen1@cpc1.edu.vn": "❌ NOT FOUND",
+        "emp1@cpc1.edu.vn": "❌ NOT FOUND",
+        "student1@cpc1.edu.vn": "❌ NOT FOUND"
+    },
+    "final_stats": {
+        "active_users": 12,
+        "students": 5,
+        "total_balance": "25000000.00",
+        "menus": 6,
+        "meal_registrations": 7,
+        "transactions": 6
+    }
+}

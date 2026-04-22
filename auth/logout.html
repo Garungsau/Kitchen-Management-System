@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng xuất</title>
+</head>
+<body>
+    <p id="msg">Đang đăng xuất...</p>
+    <script>
+    (async () => {
+        try {
+            await fetch('../api/auth/logout.php', { credentials: 'include' });
+        } catch (e) {}
+        document.getElementById('msg').textContent = 'Đã đăng xuất, chuyển về đăng nhập...';
+        setTimeout(() => window.location.replace('../auth/login.html'), 300);
+    })();
+    </script>
+</body>
+</html>
