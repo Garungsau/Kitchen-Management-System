@@ -1,0 +1,42 @@
+# Environment Variables
+.env
+.env*
+!/.env.example
+
+# Local Development Configurations
+docker-compose.yml
+docker-compose.override.yml
+api/smtp_config.php
+frontend/Dockerfile
+nginx-conf/nginx.conf
+
+# Django / Python
+__pycache__/
+*.pyc
+db.sqlite3
+mediafiles/
+staticfiles/
+venv/
+.venv/
+env/
+
+# Next.js / Node
+node_modules/
+.next/
+build/
+out/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE files
+.vscode/
+.idea/
+
+# Other
+commands.txt
+Future Updates.txt

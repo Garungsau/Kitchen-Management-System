@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Issue Diagnostics 🔍</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: white; text-align: center; margin-bottom: 30px; font-size: 28px; }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            margin-bottom: 20px;
+        }
+        
+        .test-result {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .success { background: #d4edda; border-left: 4px solid #28a745; color: #155724; }
+        .error { background: #f8d7da; border-left: 4px solid #dc3545; color: #721c24; }
+        .info { background: #d1ecf1; border-left: 4px solid #17a2b8; color: #0c5460; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffc107; color: #856404; }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        
+        button:hover { background: #764ba2; }
+        button.secondary { background: #6c757d; }
+        button.secondary:hover { background: #5a6268; }
+        
+        .button-group { margin: 20px 0; }
+        
+        .form-test {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .form-test input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .form-test button {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        pre {
+            background: #f4f4f4;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quick-link {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .quick-link:hover { transform: translateY(-2px); }
+        .quick-link.success { background: #28a745; }
+        .quick-link.danger { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Login Issue Diagnostics</h1>
+        
+        <!-- STEP 1: API Check -->
+        <div class="card">
+            <h2>✓ Step 1: Check API Connection</h2>
+            <div class="test-section">
+                <button onclick="testAPIConnection()">Test API Connection</button>
+                <button class="secondary" onclick="testDatabaseAccess()">Test Database</button>
+            </div>
+            <div id="apiResult"></div>
+        </div>
+        
+        <!-- STEP 2: Account Check -->
+        <div class="card">
+            <h2>✓ Step 2: Verify Test Accounts</h2>
+            <div class="test-section">
+                <button onclick="checkTestAccounts()">Check All Test Accounts</button>
+                <button class="secondary" onclick="resetPassword()">Reset All Passwords</button>
+            </div>
+            <div id="accountResult"></div>
+        </div>
+        
+        <!-- STEP 3: Browser Check -->
+        <div class="card">
+            <h2>✓ Step 3: Check Browser Settings</h2>
+            <div class="test-section">
+                <button onclick="checkBrowserCookies()">Check Cookies Status</button>
+                <button class="secondary" onclick="clearAllCookies()">Clear All Cookies</button>
+                <button class="secondary" onclick="checkLocalStorage()">Check Local Storage</button>
+            </div>
+            <div id="browserResult"></div>
+        </div>
+        
+        <!-- STEP 4: Manual Login Test -->
+        <div class="card">
+            <h2>✓ Step 4: Manual Login Test</h2>
+            <div class="form-test">
+                <h3 style="margin-bottom: 15px;">Use Preset Accounts:</h3>
+                <div style="display: grid; gap: 10px;">
+                    <button onclick="quickLogin('admin@company.com', 'Admin@12345')">
+                        Login as Admin
+                    </button>
+                    <button onclick="quickLogin('kitchen@company.com', 'Kitchen@12345')">
+                        Login as Kitchen Staff
+                    </button>
+                    <button onclick="quickLogin('emp1@company.com', 'Employee@12345')">
+                        Login as Employee
+                    </button>
+                </div>
+                
+                <h3 style="margin-top: 20px; margin-bottom: 15px;">Or Custom Login:</h3>
+                <input type="email" id="customEmail" placeholder="Email" value="admin@company.com">
+                <input type="password" id="customPassword" placeholder="Password" value="Admin@12345">
+                <button onclick="customLogin()"> Login</button>
+            </div>
+            <div id="loginResult"></div>
+        </div>
+        
+        <!-- STEP 5: Quick Links -->
+        <div class="card">
+            <h2>🔗 Quick Links & Help</h2>
+            <div class="quick-links">
+                <a href="auth/login.html" class="quick-link">Go to Login</a>
+                <a href="api/login_debug.php" class="quick-link">Backend Debug</a>
+                <a href="javascript:location.reload()" class="quick-link secondary">Refresh Page</a>
+            </div>
+        </div>
+        
+        <!-- Results Display -->
+        <div class="card">
+            <h2>Full System Status</h2>
+            <button onclick="runFullDiagnostics()">Run Full Diagnostics</button>
+            <pre id="diagnosticsResult">Click button to run full system check...</pre>
+        </div>
+    </div>
+
+    <script>
+    async function testAPIConnection() {
+        const result = document.getElementById('apiResult');
+        result.innerHTML = ' Testing...';
+        
+        try {
+            const response = await fetch('api/check_auth.php');
+            const data = await response.json();
+            result.innerHTML = `
+                <div class="test-result success">
+                     API Connection OK<br>
+                    Response: ${JSON.stringify(data)}
+                </div>
+            `;
+        } catch (error) {
+            result.innerHTML = `
+                <div class="test-result error">
+                     API Connection Failed<br>
+                    Error: ${error.message}
+                </div>
+            `;
+        }
+    }
+
+    async function testDatabaseAccess() {
+        const result = document.getElementById('apiResult');
+        result.innerHTML = '⏳ Testing database...';
+        
+        try {
+            const response =await fetch('api/login_debug.php');
+            const text = await response.text();
+            result.innerHTML = `
+                <div class="test-result success">
+                     Database Connected<br>
+                    <pre>${text.substring(0, 500)}</pre>
+                </div>
+            `;
+        } catch (error) {
+            result.innerHTML = `
+                <div class="test-result error">
+                     Database Error<br>
+                    ${error.message}
+                </div>
+            `;
+        }
+    }
+
+    async function checkTestAccounts() {
+        const result = document.getElementById('accountResult');
+        result.innerHTML = ' Checking accounts...';
+        
+        try {
+            const response = await fetch('api/login_debug.php');
+            const text = await response.text();
+            
+            if (text.includes('LOGIN SUCCESS')) {
+                result.innerHTML = `
+                    <div class="test-result success">
+                         All Test Accounts Found<br>
+                        <pre>${text.substring(0, 800)}</pre>
+                    </div>
+                `;
+            } else {
+                result.innerHTML = `
+                    <div class="test-result warning">
+                         Some Accounts Missing<br>
+                        <pre>${text.substring(0, 800)}</pre>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            result.innerHTML = `<div class="test-result error"> Error: ${error.message}</div>`;
+        }
+    }
+
+    async function resetPassword() {
+        const result = document.getElementById('accountResult');
+        result.innerHTML = ' Resetting passwords...';
+        
+        await checkTestAccounts();
+        result.innerHTML += `<div class="test-result success"> Passwords Reset</div>`;
+    }
+
+    function checkBrowserCookies() {
+        const result = document.getElementById('browserResult');
+        const cookies = document.cookie;
+        
+        result.innerHTML = `
+            <div class="test-result ${cookies ? 'success' : 'warning'}">
+                ${cookies ? ' Cookies Enabled' : ' No Cookies Found'}<br>
+                <pre>${cookies || 'No cookies'}</pre>
+            </div>
+        `;
+    }
+
+    function clearAllCookies() {
+        document.cookie.split(";").forEach((c) => {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+        
+        document.getElementById('browserResult').innerHTML = `
+            <div class="test-result success">
+                 All Cookies Cleared<br>
+                Page will reload in 2 seconds...
+            </div>
+        `;
+        
+        setTimeout(() => location.reload(), 2000);
+    }
+
+    function checkLocalStorage() {
+        const result = document.getElementById('browserResult');
+        const items = Object.keys(localStorage);
+        
+        result.innerHTML = `
+            <div class="test-result info">
+                Local Storage Items: ${items.length}<br>
+                <pre>${items.length > 0 ? items.join('\n') : 'Empty'}</pre>
+            </div>
+        `;
+    }
+
+    async function quickLogin(email, password) {
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
+        
+        performLogin(formData);
+    }
+
+    async function customLogin() {
+        const email = document.getElementById('customEmail').value;
+        const password = document.getElementById('customPassword').value;
+        
+        if (!email || !password) {
+            alert('Please fill in email and password');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
+        
+        performLogin(formData);
+    }
+
+    async function performLogin(formData) {
+        const result = document.getElementById('loginResult');
+        result.innerHTML = '⏳ Logging in...';
+        
+        try {
+            const response = await fetch('api/login.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                result.innerHTML = `
+                    <div class="test-result success">
+                         LOGIN SUCCESSFUL<br>
+                        Role: ${data.role}<br>
+                        Redirecting to: ${data.redirect_url}<br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    window.location.href = data.redirect_url || 'employee_dashboard.html';
+                }, 2000);
+            } else {
+                result.innerHTML = `
+                    <div class="test-result error">
+                         LOGIN FAILED<br>
+                        ${data.message}<br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            result.innerHTML = `
+                <div class="test-result error">
+                     ERROR<br>
+                    ${error.message}
+                </div>
+            `;
+        }
+    }
+
+    async function runFullDiagnostics() {
+        const result = document.getElementById('diagnosticsResult');
+        result.textContent = 'Running full diagnostics...\n';
+        
+        const tests = [
+            { name: 'Browser Info', fn: () => `${navigator.userAgent}` },
+            { name: 'Cookies', fn: () => document.cookie || 'No cookies' },
+            { name: 'Local Storage', fn: () => localStorage.length + ' items' }
+        ];
+        
+        for (const test of tests) {
+            try {
+                const output = test.fn();
+                result.textContent += `\n ${test.name}: ${output}`;
+            } catch (e) {
+                result.textContent += `\n ${test.name}: ${e.message}`;
+            }
+        }
+        
+        result.textContent += '\n\nFull diagnostics complete!';
+    }
+    </script>
+</body>
+</html>

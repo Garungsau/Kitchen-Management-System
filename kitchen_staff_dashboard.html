@@ -1,0 +1,2865 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điều Khiển Bếp | Hệ thống quản lý bếp ăn CPC1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --border: #e2e8f4;
+            --border2: #c8d6ef;
+            --blue: #1d4ed8;
+            --blue-lt: #eff4ff;
+            --blue-mid: #93aef5;
+            --green: #15803d;
+            --green-lt: #f0fdf4;
+            --green-bd: #86efac;
+            --red: #b91c1c;
+            --red-lt: #fef2f2;
+            --red-bd: #fca5a5;
+            --amber: #92400e;
+            --amber-lt: #fffbeb;
+            --amber-bd: #fcd34d;
+            --text: #111827;
+            --text2: #4b5a72;
+            --text3: #8a97ac;
+            --gray-lt: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { 
+            height: 100%; 
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #navbar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1050;
+            height: 60px;
+            background: var(--surface);
+            margin: 0;
+            padding: 0;
+        }
+
+        #navbar-container .navbar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            z-index: 1050 !important;
+            background: var(--surface) !important;
+            border-bottom: 1.5px solid var(--border) !important;
+            border-radius: 0 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+            margin: 0 !important;
+            padding: 12px 0 !important;
+            height: 60px !important;
+        }
+
+        #navbar-container .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            margin-top: 72px;
+            width: 100%;
+            gap: 0;
+        }
+
+        .kitchen-main-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 0;
+            width: 100%;
+        }
+
+        .kitchen-sidebar {
+            width: 260px;
+            background: var(--surface);
+            border-right: 1.5px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h6 {
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text3);
+            margin: 0;
+        }
+
+        .kitchen-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .kitchen-menu li {
+            margin: 6px 10px;
+        }
+
+        .kitchen-menu button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 11px 14px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: normal;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .kitchen-menu button:hover {
+            background: var(--blue-lt);
+            color: var(--blue);
+        }
+
+        .kitchen-menu button.active {
+            background: var(--blue);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .kitchen-menu button i {
+            font-size: 1.05rem;
+            min-width: 20px;
+        }
+
+        .kitchen-content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .kitchen-content-header {
+            background: var(--surface);
+            padding: 20px 28px;
+            border-bottom: 1.5px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .kitchen-content-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 6px 0;
+        }
+
+        .kitchen-content-header p {
+            color: var(--text2);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .kitchen-content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px;
+        }
+
+        .tab-pane {
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            background: var(--surface);
+            transition: box-shadow 0.2s ease;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%);
+            border-bottom: 1.5px solid var(--border);
+            padding: 14px 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .card-body {
+            padding: 18px 20px;
+        }
+
+        .btn {
+            border-radius: 12px;
+            font-weight: 500;
+            padding: 9px 16px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-mid);
+            color: #fff;
+        }
+
+        .btn-outline-primary {
+            border: 1.5px solid var(--blue);
+            color: var(--blue);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .btn-success { background: var(--green); color: #fff; }
+        .btn-danger { background: var(--red); color: #fff; }
+        .btn-warning { background: var(--amber); color: #fff; }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+
+        .form-control, .form-select {
+            border: 1.5px solid var(--border2);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+            outline: none;
+        }
+
+        .stat-box {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-box .stat-label {
+            font-size: 0.85rem;
+            color: var(--text2);
+            margin: 0;
+        }
+
+        .stat-value {
+            color: var(--blue);
+        }
+
+        .text-blue { color: var(--blue) !important; }
+        .text-green { color: var(--green) !important; }
+        .text-amber { color: var(--amber) !important; }
+        .text-red { color: var(--red) !important; }
+
+        .table {
+            margin: 0;
+            color: var(--text);
+        }
+
+        .table thead th {
+            background: var(--blue);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            padding: 12px;
+            font-size: 0.85rem;
+        }
+
+        .table tbody tr:hover {
+            background: var(--gray-lt);
+        }
+
+        .table tbody td {
+            padding: 12px;
+            border-color: var(--border);
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .badge-success { background: var(--green-lt); color: var(--green); }
+        .badge-danger { background: var(--red-lt); color: var(--red); }
+        .badge-warning { background: var(--amber-lt); color: var(--amber); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+        /* SUBMENU STYLES */
+        .menu-item-parent {
+            position: relative;
+        }
+
+        .menu-item-parent > button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-toggle-icon {
+            font-size: 0.8rem;
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: var(--blue-lt);
+            border-left: 3px solid var(--blue);
+        }
+
+        .submenu.show {
+            max-height: 500px;
+        }
+
+        .submenu li {
+            margin: 0;
+        }
+
+        .submenu button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 9px 14px 9px 28px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 8px;
+        }
+
+        .submenu button:hover {
+            background: rgba(29, 78, 216, 0.1);
+            color: var(--blue);
+        }
+
+        .submenu button.active {
+            background: var(--blue);
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .submenu button i {
+            font-size: 0.9rem;
+        }
+
+        /* ADVANCED MENU STYLES */
+        .meal-input-section {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1.5px solid var(--border);
+        }
+
+        .meal-input-section input {
+            border: 1.5px solid var(--border2);
+            background: white;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+        }
+
+        .meal-input-section input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+        }
+
+        .meal-items-container {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .meal-item-card {
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .meal-item-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--blue);
+        }
+
+        .meal-item-info {
+            flex: 1;
+        }
+
+        .meal-item-name {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .meal-item-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--text2);
+        }
+
+        .meal-item-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .meal-item-stat-value {
+            font-weight: 600;
+            color: var(--blue);
+        }
+
+        .meal-item-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 12px;
+        }
+
+        .meal-item-actions .btn {
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .meal-empty-state {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text3);
+            font-size: 0.9rem;
+        }
+
+        .meal-empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .meal-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .meal-section-badge {
+            display: inline-block;
+            background: #e5e7eb;
+            color: #374151;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        .menu-action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1.5px solid var(--border);
+        }
+
+        .menu-action-buttons .btn {
+            padding: 12px 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 1024px) {
+            .kitchen-sidebar { width: 220px; }
+            .kitchen-content-body { padding: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .kitchen-main-wrapper { flex-direction: column; }
+            .kitchen-sidebar { 
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 12px 0;
+                max-height: 70px;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            .kitchen-menu {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                padding: 0 10px;
+            }
+            .kitchen-menu li { margin: 0; flex-shrink: 0; }
+            .kitchen-menu button { width: auto; white-space: nowrap; }
+            .sidebar-header { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <main>
+    <div class="kitchen-main-wrapper">
+        <aside class="kitchen-sidebar">
+            <div class="sidebar-header">
+                <h6>🍳 Menu Chức Năng</h6>
+            </div>
+            <ul class="kitchen-menu" id="kitchenTabs" role="tablist">
+                <li><button class="nav-link active" id="btn-tab-check" data-bs-toggle="tab" data-bs-target="#tab-check"><i class="bi bi-check-circle"></i> Check-in Suất</button></li>
+                <li><a href="kitchen_face_checkin.html" class="nav-link" style="text-decoration: none;">
+                    <i class="bi bi-camera-fill"></i> Check-in Khuôn Mặt
+                </a></li>
+                <li><button class="nav-link" id="btn-tab-menu" data-bs-toggle="tab" data-bs-target="#tab-menu"><i class="bi bi-list-ul"></i> Thực Đơn Hôm Nay</button></li>
+                <li><button class="nav-link" id="btn-tab-overview" data-bs-toggle="tab" data-bs-target="#tab-overview"><i class="bi bi-graph-up"></i> Tổng Quan</button></li>
+                <li class="menu-item-parent">
+                    <button type="button" id="btn-ingredients-toggle" class="nav-link">
+                        <span class="d-flex align-items-center gap-2" style="flex: 1;">
+                            <i class="bi bi-box"></i>
+                            <span>Nguyên Liệu</span>
+                        </span>
+                        <i class="bi bi-chevron-down menu-toggle-icon"></i>
+                    </button>
+                    <ul class="submenu" id="submenu-ingredients">
+                        <li><button type="button" class="submenu-btn" data-bs-toggle="tab" data-bs-target="#tab-ingredients-inventory"><i class="bi bi-boxes"></i> Tồn Kho</button></li>
+                        <li><button type="button" class="submenu-btn" data-bs-toggle="tab" data-bs-target="#tab-ingredients-list"><i class="bi bi-list-check"></i> Danh Sách Nguyên Liệu</button></li>
+                        <li><button type="button" class="submenu-btn" data-bs-toggle="tab" data-bs-target="#tab-ingredients-order"><i class="bi bi-bag-plus"></i> Đặt Nguyên Liệu</button></li>
+                        <li><button type="button" class="submenu-btn" data-bs-toggle="tab" data-bs-target="#tab-ingredients-history"><i class="bi bi-clock-history"></i> Lịch Sử Đặt Hàng</button></li>
+                    </ul>
+                </li>
+                <li><button class="nav-link" id="btn-tab-suppliers" data-bs-toggle="tab" data-bs-target="#tab-suppliers"><i class="bi bi-shop"></i> Nhà Cung Cấp</button></li>
+                <li><button class="nav-link" id="btn-tab-cost" data-bs-toggle="tab" data-bs-target="#tab-cost"><i class="bi bi-wallet2"></i> Báo Cáo Chi Phí</button></li>
+                <li><button class="nav-link" id="btn-tab-analytics" data-bs-toggle="tab" data-bs-target="#tab-analytics" onclick="initializeCharts()"><i class="bi bi-graph-up"></i> Phân Tích & Biểu Đồ</button></li>
+                <li><button class="nav-link" id="btn-tab-complaints" data-bs-toggle="tab" data-bs-target="#tab-complaints"><i class="bi bi-exclamation-circle"></i> Khiếu Nại & Góp Ý</button></li>
+            </ul>
+        </aside>
+
+        <div class="kitchen-content-area">
+            <div class="kitchen-content-body">
+                <div class="alert alert-info border-info shadow-sm mb-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div><i class="bi bi-info-circle-fill me-2"></i><strong>Thông báo:</strong> Bảng điều khiển quản lý bếp ăn - Quản lý suất ăn, thực đơn, nguyên liệu, nhà cung cấp.</div>
+                </div>
+
+                <div id="noticeSection"></div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-box p-3 text-center">
+                            <div class="small text-muted fw-bold">Suất Hôm Nay</div>
+                            <div class="fs-4 fw-bold text-blue stat-value" id="totalMealsToday">0</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box p-3 text-center">
+                            <div class="small text-muted fw-bold">Đã Check-in</div>
+                            <div class="fs-4 fw-bold text-green stat-value" id="totalCheckedInToday">0</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box p-3 text-center">
+                            <div class="small text-muted fw-bold">Chưa Check-in</div>
+                            <div class="fs-4 fw-bold text-amber stat-value" id="totalPendingToday">0</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-box p-3 text-center">
+                            <div class="small text-muted fw-bold">Khiếu Nại Mở</div>
+                            <div class="fs-4 fw-bold text-red stat-value" id="totalOpenComplaints">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content">
+                    <!-- TAB 1: CHECK-IN -->
+                    <div class="tab-pane fade show active" id="tab-check">
+                        <div class="row g-3">
+                            <div class="col-lg-8">
+                                <div class="card">
+                                    <div class="card-header">✓ Check-in một bước</div>
+                                    <div class="card-body">
+                                        <p class="text-muted small">Nhập mã nhân viên để ghi nhận check-in suất ăn</p>
+                                        <a href="kitchen_face_checkin.html" class="btn btn-outline-primary btn-sm mb-3">
+                                            <i class="bi bi-camera-video"></i> Mở chế độ nhận diện khuôn mặt
+                                        </a>
+                                        <form id="checkUserForm" class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Mã Nhân Viên</label>
+                                                <input type="text" id="chkStudentId" class="form-control" required placeholder="VD: NV001">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Ngày</label>
+                                                <input type="date" id="chkDate" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-2 d-grid">
+                                                <label class="form-label small fw-bold text-transparent">.</label>
+                                                <button type="submit" class="btn btn-primary">Xác Nhận</button>
+                                            </div>
+                                        </form>
+                                        <div id="chkResult" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header">📊 Thống Kê</div>
+                                    <div class="card-body">
+                                        <div class="stat-box mb-3">
+                                            <div class="stat-label">Tổng Suất Hôm Nay</div>
+                                            <div class="stat-value text-primary" id="todayMeals">0</div>
+                                        </div>
+                                        <div class="small">
+                                            <div class="mb-2">✓ Đã Check-in: <strong id="checkedIn">0</strong></div>
+                                            <div>⏳ Chờ Check-in: <strong id="pending">0</strong></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: MENU -->
+                    <div class="tab-pane fade" id="tab-menu">
+                        <!-- Templates Section -->
+                        <div class="card mb-3">
+                            <div class="card-header fw-bold d-flex justify-content-between">
+                                <span>📋 Thực Đơn Template</span>
+                                <button class="btn btn-sm btn-primary" onclick="createNewTemplate()">➕ Tạo Template</button>
+                            </div>
+                            <div class="card-body p-2" id="templateSelector" style="max-height: 150px; overflow-y: auto;">
+                                <p class="text-muted">Đang tải...</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header">📝 Soạn Thực Đơn Nâng Cao</div>
+                                    <div class="card-body">
+                                        <!-- DATE SELECTOR -->
+                                        <div class="mb-4">
+                                            <label class="form-label small fw-bold text-primary">📅 Ngày Áp Dụng</label>
+                                            <input type="date" id="menuDateInput" class="form-control form-control-lg" required style="font-size: 1rem; font-weight: 500;">
+                                        </div>
+
+                                        <!-- LUNCH SECTION -->
+                                        <div>
+                                            <div class="meal-section-header">
+                                                ☀️ Suất Trưa
+                                                <span class="meal-section-badge" id="lunchCountBadge">0 món</span>
+                                            </div>
+
+                                            <div class="meal-input-section">
+                                                <form class="row g-2" onsubmit="addMealItem(event, 'lunch')">
+                                                    <div class="col-md-9">
+                                                        <input type="text" id="lunchMealName" class="form-control" placeholder="Tên món (VD: Cơm Tấm - Thịt Nướng)" required>
+                                                    </div>
+                                                    <div class="col-md-3 d-grid">
+                                                        <button type="submit" class="btn btn-primary" style="padding: 10px;">➕</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <div class="meal-items-container" id="lunchMealsContainer">
+                                                <div class="meal-empty-state">
+                                                    <div class="meal-empty-icon">🥗</div>
+                                                    <div>Chưa thêm món ăn</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- DINNER SECTION -->
+                                        <div style="margin-top: 32px;">
+                                            <div class="meal-section-header">
+                                                🌙 Suất Tối
+                                                <span class="meal-section-badge" id="dinnerCountBadge">0 món</span>
+                                            </div>
+
+                                            <div class="meal-input-section">
+                                                <form class="row g-2" onsubmit="addMealItem(event, 'dinner')">
+                                                    <div class="col-md-9">
+                                                        <input type="text" id="dinnerMealName" class="form-control" placeholder="Tên món (VD: Canh Chua)" required>
+                                                    </div>
+                                                    <div class="col-md-3 d-grid">
+                                                        <button type="submit" class="btn btn-primary" style="padding: 10px;">➕</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <div class="meal-items-container" id="dinnerMealsContainer">
+                                                <div class="meal-empty-state">
+                                                    <div class="meal-empty-icon">🍜</div>
+                                                    <div>Chưa thêm món ăn</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- ACTION BUTTONS -->
+                                        <div class="menu-action-buttons">
+                                            <button type="button" class="btn btn-primary" id="btnSaveMenuAdvanced">
+                                                <i class="bi bi-download me-2"></i>Lưu Nháp
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary" id="btnSubmitMenuApproval">
+                                                <i class="bi bi-send me-2"></i>Gửi Duyệt
+                                            </button>
+                                        </div>
+
+                                        <div id="menuMsg" class="mt-3"></div>
+                                        <input type="hidden" id="currentMenuId" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">👀 Xem Trước</div>
+                                    <div class="card-body">
+                                        <div id="lunchMenuDisplay" class="mb-3"></div>
+                                        <div id="dinnerMenuDisplay"></div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">⏳ Hàng Chờ Phê Duyệt</div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ngày</th>
+                                                        <th>Trưa</th>
+                                                        <th>Trạng Thái</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="menuQueueBody">
+                                                    <tr><td colspan="4" class="text-center text-muted py-3">Đang tải...</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>🥦 Nguyên Liệu Cho Thực Đơn</span>
+                                <button type="button" class="btn btn-sm btn-primary" id="btnSaveMenuIngredients">
+                                    <i class="bi bi-download me-1"></i>Lưu Nguyên Liệu
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info py-2 mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>Thêm số lượng và đơn vị cho từng nguyên liệu theo bữa
+                                </div>
+
+                                <!-- THỰC ĐƠN HIỆN TẠI -->
+                                <div id="currentMenuSummary" class="alert alert-info mb-3" style="display: none;">
+                                    <strong>📋 Thực Đơn Hiện Tại:</strong>
+                                    <div id="currentMenuDetails" class="mt-2 small"></div>
+                                </div>
+
+                                <div class="row g-4">
+                                    <!-- LUNCH INGREDIENTS -->
+                                    <div class="col-md-6">
+                                        <div class="border rounded p-3 h-100">
+                                            <h6 class="fw-bold mb-3">☀️ Bữa Trưa</h6>
+                                            
+                                            <div class="d-flex gap-2 mb-3">
+                                                <select id="menuIngredientSelect-lunch" class="form-select form-select-sm" style="flex: 1;" required></select>
+                                                <input type="number" id="menuIngredientQty-lunch" class="form-control form-control-sm" step="0.01" min="0" placeholder="SL" style="max-width: 80px;" required>
+                                                <button class="btn btn-sm btn-primary" id="btnAddMenuIngredient-lunch" style="padding: 5px 12px;">➕</button>
+                                            </div>
+
+                                            <div class="table-responsive">
+                                                <table class="table table-sm mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>Nguyên Liệu</th>
+                                                            <th class="text-center" style="width: 70px;">SL</th>
+                                                            <th class="text-center" style="width: 50px;">DVT</th>
+                                                            <th class="text-center" style="width: 50px;">X</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="menuIngredientBody-lunch">
+                                                        <tr><td colspan="4" class="text-center text-muted py-2 small">Chưa thêm</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- DINNER INGREDIENTS -->
+                                    <div class="col-md-6">
+                                        <div class="border rounded p-3 h-100">
+                                            <h6 class="fw-bold mb-3">🌙 Bữa Tối</h6>
+                                            
+                                            <div class="d-flex gap-2 mb-3">
+                                                <select id="menuIngredientSelect-dinner" class="form-select form-select-sm" style="flex: 1;" required></select>
+                                                <input type="number" id="menuIngredientQty-dinner" class="form-control form-control-sm" step="0.01" min="0" placeholder="SL" style="max-width: 80px;" required>
+                                                <button class="btn btn-sm btn-primary" id="btnAddMenuIngredient-dinner" style="padding: 5px 12px;">➕</button>
+                                            </div>
+
+                                            <div class="table-responsive">
+                                                <table class="table table-sm mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>Nguyên Liệu</th>
+                                                            <th class="text-center" style="width: 70px;">SL</th>
+                                                            <th class="text-center" style="width: 50px;">DVT</th>
+                                                            <th class="text-center" style="width: 50px;">X</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="menuIngredientBody-dinner">
+                                                        <tr><td colspan="4" class="text-center text-muted py-2 small">Chưa thêm</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="menuIngredientMsg" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: TỔNG QUAN -->
+                    <div class="tab-pane fade" id="tab-overview">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Tổng Nhân Viên</div>
+                                    <div class="stat-value" id="totalEmp">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Đã Đăng Ký</div>
+                                    <div class="stat-value text-primary" id="cntOn">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Chưa Đăng Ký</div>
+                                    <div class="stat-value text-secondary" id="cntOff">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Gạo Cần (~200g)</div>
+                                    <div class="stat-value text-info" id="estRice">0 kg</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">📋 Danh Sách Suất Ăn</div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Họ Tên</th>
+                                                <th>Mã NV</th>
+                                                <th>Bộ Phận</th>
+                                                <th>Trạng Thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="studentTableBody">
+                                            <tr><td colspan="4" class="text-center py-3 text-muted">Chưa có dữ liệu</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: NGUYÊN LIỆU - SUB TABS -->
+                    
+                    <!-- SUB TAB: TỒNKHO -->
+                    <div class="tab-pane fade" id="tab-ingredients-inventory">
+                        <!-- SECTION: CẢNH BÁO TỒNKHO THẤP -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-12">
+                                <div class="card border-secondary">
+                                    <div class="card-header bg-secondary text-white">⚠️ Cảnh Báo Tồn Kho Thấp</div>
+                                    <div class="card-body p-2">
+                                        <div id="lowStockAlerts" class="small">
+                                            <div class="text-muted">Đang tải...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION: NGUYÊN LIỆU CẦN ĐẶT HÀNG -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-12">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info text-white">📊 Nguyên Liệu Cần Cho Thực Đơn Hôm Nay</div>
+                                    <div class="card-body p-2">
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Chọn Ngày</label>
+                                                <input type="date" id="menuNeedDate" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Chọn Bữa</label>
+                                                <select id="menuNeedMeal" class="form-select form-select-sm">
+                                                    <option value="">-- Tất cả --</option>
+                                                    <option value="lunch">Trưa</option>
+                                                    <option value="dinner">Tối</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 d-flex align-items-end">
+                                                <div class="d-grid gap-2 w-100">
+                                                    <button class="btn btn-sm btn-info" onclick="loadMenuNeeds()">🔄 Tính Nhu Cầu</button>
+                                                    <button class="btn btn-sm btn-outline-secondary" onclick="deductMenuIngredients()">➖ Trừ Kho Theo Thực Đơn</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="menuNeedsTable" class="table-responsive">
+                                            <table class="table table-sm table-bordered mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Nguyên Liệu</th>
+                                                        <th>Cần (ML)</th>
+                                                        <th>Tồn Kho</th>
+                                                        <th>Thiếu</th>
+                                                        <th>Đơn Giá</th>
+                                                        <th>Thành Tiền</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="menuNeedsBody">
+                                                    <tr><td colspan="6" class="text-center py-2 text-muted">Chọn ngày để hiển thị</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUB TAB: DANH SÁCH NGUYÊN LIỆU -->
+                    <div class="tab-pane fade" id="tab-ingredients-list">
+                        <div class="row g-3">
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header">➕ Thêm Nguyên Liệu</div>
+                                    <div class="card-body">
+                                        <form id="ingredientForm" class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Tên Nguyên Liệu</label>
+                                                <input type="text" id="ingrName" class="form-control form-control-sm" placeholder="VD: Gạo Tẻ" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Loại</label>
+                                                <select id="ingrType" class="form-select form-select-sm" required>
+                                                    <option value="">-- Chọn Loại --</option>
+                                                    <option value="grain">Lúa Gạo</option>
+                                                    <option value="vegetable">Rau Củ</option>
+                                                    <option value="protein">Đạm (Thịt/Cá)</option>
+                                                    <option value="spice">Gia Vị</option>
+                                                    <option value="other">Khác</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Đơn Vị</label>
+                                                <input type="text" id="ingrUnit" class="form-control form-control-sm" placeholder="kg, lít" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Số Lượng</label>
+                                                <input type="number" id="ingrQty" class="form-control form-control-sm" placeholder="0" step="0.01" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Đơn Giá</label>
+                                                <input type="number" id="ingrPrice" class="form-control form-control-sm" placeholder="0" step="1000" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Ngày Nhập</label>
+                                                <input type="date" id="ingrDate" class="form-control form-control-sm" required>
+                                            </div>
+                                            <div class="col-12 d-grid">
+                                                <button type="submit" class="btn btn-primary btn-sm">💾 Thêm</button>
+                                            </div>
+                                            <div id="ingrMsg" class="col-12"></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card">
+                                    <div class="card-header">📦 Danh Sách Nguyên Liệu</div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Tên</th>
+                                                        <th>Mô Tả</th>
+                                                        <th>Tồn Kho</th>
+                                                        <th>Đơn Vị</th>
+                                                        <th>Bảng Giá</th>
+                                                        <th>% VAT</th>
+                                                        <th>Giá Sau VAT</th>
+                                                        <th>Hạn Dùng/Dự Kiến</th>
+                                                        <th>Ghi Chú</th>
+                                                        <th>Ngày</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="ingredientTableBody">
+                                                    <tr><td colspan="11" class="text-center py-2 text-muted">Chưa có dữ liệu</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUB TAB: ĐẶT NGUYÊN LIỆU -->
+                    <div class="tab-pane fade" id="tab-ingredients-order">
+                        <div class="row g-3">
+                            <div class="col-lg-5">
+                                <div class="card">
+                                    <div class="card-header">📦 Đặt Hàng Mới</div>
+                                    <div class="card-body">
+                                        <form id="orderForm" class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Tên Nguyên Liệu</label>
+                                                <input type="text" id="orderIngrName" class="form-control form-control-sm" placeholder="VD: Gạo, Cà Chua" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Nhà Cung Cấp</label>
+                                                <select id="orderSupplierId" class="form-select form-select-sm" required>
+                                                    <option value="">-- Chọn NCC --</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Số Lượng</label>
+                                                <input type="number" id="orderQty" class="form-control form-control-sm" step="0.01" min="0" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Đơn Vị</label>
+                                                <input type="text" id="orderUnit" class="form-control form-control-sm" placeholder="kg, lít" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Đơn Giá</label>
+                                                <input type="number" id="orderPrice" class="form-control form-control-sm" step="1000" min="0">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small fw-bold">Dự Kiến Nhận</label>
+                                                <input type="date" id="orderExpectedDate" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Ghi Chú</label>
+                                                <textarea id="orderNotes" class="form-control form-control-sm" rows="2" placeholder="Ghi chú thêm..."></textarea>
+                                            </div>
+                                            <div class="col-12 d-grid">
+                                                <button type="submit" class="btn btn-primary btn-sm">✅ Đặt Hàng</button>
+                                            </div>
+                                            <div id="orderMsg" class="col-12"></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUB TAB: LỊCH SỬ ĐẶT HÀNG -->
+                    <div class="tab-pane fade" id="tab-ingredients-history">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">📋 Lịch Sử Đặt Hàng</div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Nguyên Liệu</th>
+                                                        <th>NCC</th>
+                                                        <th>Số Lượng</th>
+                                                        <th>Đơn Giá</th>
+                                                        <th>% VAT</th>
+                                                        <th>Giá Sau VAT</th>
+                                                        <th>Trạng Thái</th>
+                                                        <th>Ngày ĐH</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="orderTableBody">
+                                                    <tr><td colspan="9" class="text-center py-2 text-muted">Chưa có đơn hàng</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: NHÀ CUNG CẤP -->
+                    <div class="tab-pane fade" id="tab-suppliers">
+                        <div class="row g-3">
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header">➕ Thêm NCC</div>
+                                    <div class="card-body">
+                                        <form id="supplierForm" class="row g-3">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Tên Công Ty</label>
+                                                <input type="text" id="supplName" class="form-control" placeholder="VD: ABC Trading" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Người Liên Hệ</label>
+                                                <input type="text" id="supplContact" class="form-control" placeholder="Họ Tên" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Số Điện Thoại</label>
+                                                <input type="tel" id="supplPhone" class="form-control" placeholder="0901234567" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Email</label>
+                                                <input type="email" id="supplEmail" class="form-control" placeholder="abc@gmail.com">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Địa Chỉ</label>
+                                                <textarea id="supplAddress" class="form-control" rows="2" placeholder="Địa chỉ giao hàng" required></textarea>
+                                            </div>
+                                            <div class="col-12 d-grid">
+                                                <button type="submit" class="btn btn-primary">💾 Thêm</button>
+                                            </div>
+                                            <div id="supplMsg" class="col-12"></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card">
+                                    <div class="card-header">🏪 Danh Sách Nhà Cung Cấp</div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Công Ty</th>
+                                                        <th>Người Liên Hệ</th>
+                                                        <th>Điện Thoại</th>
+                                                        <th>Email</th>
+                                                        <th>Địa Chỉ</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="supplierTableBody">
+                                                    <tr><td colspan="6" class="text-center py-3 text-muted">Chưa có dữ liệu</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: CHI PHÍ -->
+                    <div class="tab-pane fade" id="tab-cost">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Hôm Nay</div>
+                                    <div class="stat-value text-primary" id="costToday">₫0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Tuần Này</div>
+                                    <div class="stat-value text-info" id="costWeek">₫0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Tháng Này</div>
+                                    <div class="stat-value text-secondary" id="costMonth">₫0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-box">
+                                    <div class="stat-label">Chi/Suất</div>
+                                    <div class="stat-value text-primary" id="costPerMeal">₫0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">💰 Chi Phí Theo Loại</div>
+                            <div class="card-body">
+                                <div id="costByTypeContainer">
+                                    <div class="text-center text-muted py-5">Đang tải...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header">📑 Bảng Giá & VAT</div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-sm mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Nguyên Liệu</th>
+                                                <th>NCC</th>
+                                                <th>Đơn Giá</th>
+                                                <th>% VAT</th>
+                                                <th>Giá Sau VAT</th>
+                                                <th>Hạn Dùng/Dự Kiến</th>
+                                                <th>Ghi Chú</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="costPriceBody">
+                                            <tr><td colspan="7" class="text-center text-muted py-3">Đang tải...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="p-2 small text-muted" id="costPriceSummary"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PHÂN TÍCH & BIỂU ĐỒ -->
+                    <div class="tab-pane fade" id="tab-analytics">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header fw-bold bg-light">Cài Đặt Báo Cáo</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Kỳ Báo Cáo</label>
+                                            <input type="month" id="reportMonth" class="form-control" value="">
+                                            <script>document.getElementById('reportMonth').value = new Date().toISOString().slice(0, 7);</script>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Đơn Giá Suất Ăn (₫)</label>
+                                            <input type="number" id="unitCost" class="form-control" value="35000" min="0">
+                                        </div>
+                                        <button class="btn btn-secondary w-100" onclick="refreshCharts()">
+                                            <i class="bi bi-arrow-clockwise"></i> Làm mới biểu đồ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header fw-bold bg-light">📊 Tỷ Lệ Đăng Ký Hàng Tuần</div>
+                                    <div class="card-body">
+                                        <canvas id="weeklyRegistrationChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header fw-bold bg-light">💰 Xu Hướng Chi Phí 6 Tháng</div>
+                                    <div class="card-body">
+                                        <canvas id="monthlyCostTrendChart" height="280"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header fw-bold bg-light">🍽️ Món Ăn Được Yêu Thích</div>
+                                    <div class="card-body">
+                                        <canvas id="favoriteMealsChart" height="280"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header fw-bold bg-light">👥 Thống Kê Theo Phòng Ban</div>
+                                    <div class="card-body">
+                                        <canvas id="departmentStatsChart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header fw-bold bg-light">📈 Xu Hướng Xác Nhận Hàng Ngày (30 Ngày)</div>
+                                    <div class="card-body">
+                                        <canvas id="dailyAttendanceChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: KHIẾU NẠI -->
+                    <div class="tab-pane fade" id="tab-complaints">
+                        <div class="card">
+                            <div class="card-header">⚠️ Danh Sách Khiếu Nại</div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size: 0.85rem;">Ngày</th>
+                                                <th style="font-size: 0.85rem;">Nhân Viên</th>
+                                                <th style="font-size: 0.85rem;">Loại</th>
+                                                <th style="font-size: 0.85rem;">Nội Dung</th>
+                                                <th style="font-size: 0.85rem;">Trạng Thái</th>
+                                                <th style="font-size: 0.85rem;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="complaintTableBody">
+                                            <tr><td colspan="6" class="text-center py-3 text-muted">Chưa có khiếu nại</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="complaintDetailModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Chi Tiết Khiếu Nại</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="complaintDetail"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form id="complaintReplyForm" class="w-100">
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold">Xử Lý Khiếu Nại</label>
+                                                <select id="replyStatus" class="form-select" required>
+                                                    <option value="">-- Chọn Hành Động --</option>
+                                                    <option value="resolved">✓ Đã Xử Lý</option>
+                                                    <option value="rejected">❌ Từ Chối</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold">Ghi Chú</label>
+                                                <textarea id="replyNote" class="form-control" rows="2" placeholder="Ghi chú xử lý..."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Lưu Xử Lý</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Edit Supplier -->
+                        <div class="modal fade" id="supplierEditModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Chỉnh Sửa Nhà Cung Cấp</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="supplierEditForm" class="row g-3">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Tên Công Ty</label>
+                                                <input type="text" id="editSupplName" class="form-control" placeholder="VD: ABC Trading" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Người Liên Hệ</label>
+                                                <input type="text" id="editSupplContact" class="form-control" placeholder="Họ Tên" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Số Điện Thoại</label>
+                                                <input type="tel" id="editSupplPhone" class="form-control" placeholder="0901234567" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Email</label>
+                                                <input type="email" id="editSupplEmail" class="form-control" placeholder="abc@gmail.com">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-bold">Địa Chỉ</label>
+                                                <textarea id="editSupplAddress" class="form-control" rows="2" placeholder="Địa chỉ giao hàng" required></textarea>
+                                            </div>
+                                            <input type="hidden" id="editSupplierId" value="0">
+                                            <div id="editSupplMsg" class="col-12"></div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-primary" onclick="submitSupplierEdit()">Lưu Thay Đổi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Xem Hồ Sơ -->
+                        <div class="modal fade" id="profileModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"><i class="bi bi-person-vcard me-2"></i>Hồ Sơ Nhân Viên</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="profileContent">
+                                            <div class="text-center p-4">
+                                                <div class="spinner-border text-primary"></div>
+                                                <p class="mt-2 text-muted">Đang tải...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/menu-advanced.js"></script>
+    <script src="assets/js/charts-helper.js"></script>
+    <script src="navbar.js"></script>
+    <script src="footer.js"></script>
+    <script>
+        let currentKitchenRole = 'kitchen_staff';
+        let currentUserId = 0;
+        const tmrStr = new Date(new Date().getTime() + 86400000).toISOString().split('T')[0];
+        const DEFAULT_VAT_PERCENT = 8;
+        let latestOrderPricing = [];
+        let ingredientOptions = [];
+        const menuIngredientState = { lunch: [], dinner: [] };
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('chkDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('menuDateInput').value = tmrStr;
+            document.getElementById('ingrDate').value = new Date().toISOString().split('T')[0];
+            
+            // Initialize database tables
+            fetch('api/setup_db.php').catch(e => console.log('DB setup called'));
+            
+            checkAuth();
+            loadMenuApprovalQueue();
+            loadKitchenStats();
+            loadIngredients();
+            loadLowStockAlerts();
+            loadSuppliersForOrder();
+            loadOrders();
+            document.getElementById('menuNeedDate').valueAsDate = new Date();
+            document.getElementById('ingrDate').valueAsDate = new Date();
+
+            loadIngredientOptions();
+            loadMenuIngredientsForDate(document.getElementById('menuDateInput').value);
+
+            // Initialize advanced menu features
+            if (typeof loadMenuTemplates === 'function') {
+                loadMenuTemplates();
+            }
+            
+            // Setup advanced menu handlers
+            const btnSaveMenu = document.getElementById('btnSaveMenuAdvanced');
+            if (btnSaveMenu) {
+                btnSaveMenu.addEventListener('click', async () => {
+                    await saveAdvancedMenuNew();
+                });
+            }
+
+            const submitApprovalBtn = document.getElementById('btnSubmitMenuApproval');
+            if (submitApprovalBtn) {
+                submitApprovalBtn.addEventListener('click', async () => {
+                    const currMenuId = document.getElementById('currentMenuId').value;
+                    if (!currMenuId || currMenuId === '0') {
+                        alert('Vui lòng lưu thực đơn trước khi gửi duyệt');
+                        return;
+                    }
+                    await submitMenuForApproval(currMenuId);
+                });
+            }
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('api/check_auth.php', { credentials: 'include' });
+                const r = await res.json();
+                if (r.status !== 'success' || !['kitchen_staff', 'admin'].includes(r.role)) {
+                    window.location.href = 'auth/login.html';
+                    return;
+                }
+                
+                currentKitchenRole = r.role || 'kitchen_staff';
+                currentUserId = r.user_id || 0;
+                
+                // Render navbar with correct role
+                if (typeof renderNavbar === 'function') {
+                    renderNavbar(currentKitchenRole, 'kitchen');
+                }
+                await loadNotices();
+                
+                // Update navbar user info when elements exist
+                const headerNameEl = document.getElementById('headerUserName');
+                if (r.full_name && headerNameEl) {
+                    headerNameEl.innerText = r.full_name;
+                }
+                const headerRoleEl = document.getElementById('headerUserRole');
+                if (r.role && headerRoleEl) {
+                    const roleMap = {
+                        'kitchen_staff': 'Nhân viên bếp',
+                        'kitchen': 'Nhân viên bếp',
+                        'admin': 'Quản trị viên'
+                    };
+                    headerRoleEl.innerText = roleMap[r.role] || r.role;
+                }
+            } catch (e) {
+                console.error('Auth error:', e);
+            }
+        }
+
+        function renderNoticeDropdown(notices) {
+            const list = document.getElementById('noticeDropdownList');
+            const empty = document.getElementById('noticeDropdownEmpty');
+            const badge = document.getElementById('noticeBellBadge');
+            if (!list || !empty || !badge) return;
+
+            list.innerHTML = '';
+
+            if (!notices || notices.length === 0) {
+                empty.classList.remove('d-none');
+                badge.classList.add('d-none');
+                return;
+            }
+
+            empty.classList.add('d-none');
+            badge.textContent = notices.length;
+            badge.classList.remove('d-none');
+
+            notices.forEach((n) => {
+                const variant = n.variant || 'primary';
+                const icon = n.icon || 'bi-bell-fill';
+                list.innerHTML += `
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="text-${variant} mt-1"><i class="bi ${icon}"></i></span>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="fw-semibold text-dark">${escapeHtml(n.title || '')}</div>
+                                    <span class="badge bg-light text-${variant}">${escapeHtml(n.label || '')}</span>
+                                </div>
+                                <div class="small text-muted mt-1">${escapeHtml(n.message || '')}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function loadNotices() {
+            const noticeSection = document.getElementById('noticeSection');
+            if (noticeSection) noticeSection.innerHTML = '';
+
+            const notices = [];
+
+            try {
+                const res = await fetch('api/get_system_notifications.php');
+                const r = await res.json();
+                if (r.status === 'success' && Array.isArray(r.data)) {
+                    r.data.forEach((n) => {
+                        const priorityMap = {
+                            danger: { variant: 'danger', icon: 'bi-shield-exclamation', label: 'Cảnh báo' },
+                            warning: { variant: 'warning', icon: 'bi-exclamation-triangle', label: 'Nhắc nhở' },
+                            info: { variant: 'primary', icon: 'bi-info-circle', label: 'Thông tin' },
+                            success: { variant: 'success', icon: 'bi-check-circle', label: 'Thành công' }
+                        };
+                        const meta = priorityMap[n.priority] || priorityMap.info;
+                        notices.push({
+                            title: n.title || 'Thông báo',
+                            message: n.message || '',
+                            variant: meta.variant,
+                            icon: meta.icon,
+                            label: meta.label
+                        });
+                    });
+                }
+            } catch (err) {}
+
+            try {
+                const res = await fetch('api/get_notices.php');
+                const r = await res.json();
+                if (r.status === 'success' && Array.isArray(r.data)) {
+                    r.data.forEach((n) => {
+                        notices.push({
+                            title: n.title || 'Thông báo',
+                            message: n.message || '',
+                            variant: 'primary',
+                            icon: 'bi-megaphone-fill',
+                            label: 'Thông báo'
+                        });
+                    });
+                }
+            } catch (err) {}
+
+            renderNoticeDropdown(notices);
+        }
+
+        async function loadKitchenStats() {
+            const today = new Date().toISOString().split('T')[0];
+            try {
+                const res = await fetch('api/get_daily_meals.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: today })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    // Update header stats
+                    document.getElementById('totalMealsToday').innerText = data.on_count || 0;
+                    document.getElementById('totalCheckedInToday').innerText = data.checked_count || 0;
+                    document.getElementById('totalPendingToday').innerText = (data.on_count - (data.checked_count || 0)) || 0;
+                    
+                    // Update tab stats
+                    document.getElementById('totalEmp').innerText = (data.on_count + data.off_count) || 0;
+                    document.getElementById('cntOn').innerText = data.on_count || 0;
+                    document.getElementById('cntOff').innerText = data.off_count || 0;
+                    document.getElementById('estRice').innerText = ((data.on_count || 0) * 0.2).toFixed(2) + ' kg';
+                    document.getElementById('todayMeals').innerText = data.on_count || 0;
+                    document.getElementById('checkedIn').innerText = data.checked_count || 0;
+                    document.getElementById('pending').innerText = (data.on_count - (data.checked_count || 0)) || 0;
+                }
+            } catch (err) {}
+            
+            // Load complaints count
+            try {
+                const res = await fetch('api/get_complaints.php');
+                const data = await res.json();
+                if (data.status === 'success' && Array.isArray(data.data)) {
+                    const openComplaints = data.data.filter(c => c.status === 'open' || c.status === 'pending').length;
+                    document.getElementById('totalOpenComplaints').innerText = openComplaints || 0;
+                }
+            } catch (err) {}
+        }
+
+        async function loadMenuApprovalQueue() {
+            try {
+                const res = await fetch('api/get_menu_list.php?status=all');
+                const r = await res.json();
+                const tbody = document.getElementById('menuQueueBody');
+                if (!tbody) return;
+
+                if (r.status !== 'success' || !Array.isArray(r.data)) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Lỗi tải dữ liệu</td></tr>';
+                    return;
+                }
+
+                if (r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Chưa có thực đơn</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = r.data.map(m => {
+                    const badge = m.approval_status === 'approved' 
+                        ? '<span class="badge bg-primary">✓ Duyệt</span>'
+                        : (m.approval_status === 'pending_approval'
+                            ? '<span class="badge bg-secondary">⏳ Chờ</span>'
+                            : '<span class="badge bg-secondary">❌ Draft</span>');
+                    return `<tr>
+                        <td>${m.menu_date}</td>
+                        <td>${m.lunch || '-'}</td>
+                        <td>${badge}</td>
+                        <td>
+                            ${m.approval_status === 'draft' && currentKitchenRole === 'kitchen_staff'
+                                ? `<button class="btn btn-sm btn-primary" onclick="submitMenuForApproval(${m.id})">Gửi</button>`
+                                : ''}
+                        </td>
+                    </tr>`;
+                }).join('');
+            } catch (err) {
+                console.error('Error loading menu:', err);
+            }
+        }
+
+        async function submitMenuForApproval(menuId) {
+            if (!menuId) {
+                alert('Chưa có thực đơn nào');
+                return;
+            }
+            try {
+                const res = await fetch('api/submit_menu_for_approval.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ menu_id: menuId })
+                });
+                const r = await res.json();
+                alert(r.message || 'Đã gửi duyệt');
+                loadMenuApprovalQueue();
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        // CHECK-IN
+        document.getElementById('checkUserForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const sid = document.getElementById('chkStudentId').value.trim();
+            const date = document.getElementById('chkDate').value;
+            const div = document.getElementById('chkResult');
+
+            if (!sid) {
+                div.innerHTML = '<div class="alert alert-danger mb-0">❌ Vui lòng nhập mã nhân viên</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch('api/checkin.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employee_id: sid, meal_date: date, meal_type: 'lunch' })
+                });
+                const r = await res.json();
+
+                if (r.status === 'success') {
+                    const badge = r.is_registered_meal === 1 
+                        ? '<span class="badge bg-primary">✓ Đã Đăng Ký</span>'
+                        : '<span class="badge bg-secondary">⚡ Phát Sinh</span>';
+                    div.innerHTML = `<div class="alert alert-info mb-0">
+                        <strong>${r.employee_name}</strong> (${r.employee_id})<br>
+                        Check-in: <strong>${r.check_in_time}</strong> - ${badge}
+                    </div>`;
+                    setTimeout(() => { div.innerHTML = ''; document.getElementById('chkStudentId').value = ''; }, 3000);
+                    loadKitchenStats();
+                } else {
+                    div.innerHTML = `<div class="alert alert-danger mb-0">❌ ${r.message || 'Check-in thất bại'}</div>`;
+                }
+            } catch (e) {
+                div.innerHTML = `<div class="alert alert-danger mb-0">❌ Lỗi: ${e.message}</div>`;
+            }
+        });
+
+        // MENU - ADVANCED WITH MULTIPLE ITEMS
+        // Global state for meal items
+        let advancedMenuState = {
+            lunch: [],
+            dinner: []
+        };
+
+        function renderMealItemsTable(mealType) {
+            const container = document.getElementById(`${mealType}MealsContainer`);
+            const badge = document.getElementById(`${mealType}CountBadge`);
+            const items = advancedMenuState[mealType] || [];
+
+            if (!container) return;
+
+            if (items.length === 0) {
+                const emptyIcon = mealType === 'lunch' ? '🥗' : '🍜';
+                container.innerHTML = `
+                    <div class="meal-empty-state">
+                        <div class="meal-empty-icon">${emptyIcon}</div>
+                        <div>Chưa thêm món ăn</div>
+                    </div>
+                `;
+                if (badge) badge.textContent = '0 món';
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="meal-item-card">
+                    <div class="meal-item-info">
+                        <div class="meal-item-name">${escapeHtml(item.name)}</div>
+                    </div>
+                    <div class="meal-item-actions">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="editMealItem('${mealType}', ${item.id})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="removeMealItem('${mealType}', ${item.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            if (badge) badge.textContent = `${items.length} món`;
+        }
+
+        function updateCurrentMenuSummary(date, lunchItems, dinnerItems) {
+            const summary = document.getElementById('currentMenuSummary');
+            const details = document.getElementById('currentMenuDetails');
+            
+            if (!summary || !details) return;
+            
+            let html = `<strong>📅 ${date}</strong><br>`;
+            
+            if (lunchItems && lunchItems.length > 0) {
+                html += `<div class="mt-2"><strong>☀️ Bữa Trưa:</strong><br>`;
+                lunchItems.forEach(item => {
+                    html += `&nbsp;&nbsp;• ${escapeHtml(item.name)}<br>`;
+                });
+                html += `</div>`;
+            }
+            
+            if (dinnerItems && dinnerItems.length > 0) {
+                html += `<div class="mt-2"><strong>🌙 Bữa Tối:</strong><br>`;
+                dinnerItems.forEach(item => {
+                    html += `&nbsp;&nbsp;• ${escapeHtml(item.name)}<br>`;
+                });
+                html += `</div>`;
+            }
+            
+            details.innerHTML = html;
+            summary.style.display = 'block';
+        }
+
+        function addMealItem(e, mealType) {
+            e.preventDefault();
+            const nameInput = document.getElementById(`${mealType}MealName`);
+
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('Vui lòng điền tên món ăn');
+                return;
+            }
+
+            const item = {
+                id: Date.now(),
+                name
+            };
+
+            advancedMenuState[mealType].push(item);
+            renderMealItemsTable(mealType);
+            
+            nameInput.value = '';
+            nameInput.focus();
+        }
+
+        function removeMealItem(mealType, itemId) {
+            advancedMenuState[mealType] = advancedMenuState[mealType].filter(item => item.id !== itemId);
+            renderMealItemsTable(mealType);
+        }
+
+        function editMealItem(mealType, itemId) {
+            const item = advancedMenuState[mealType].find(i => i.id === itemId);
+            if (!item) return;
+
+            const nameInput = document.getElementById(`${mealType}MealName`);
+
+            nameInput.value = item.name;
+
+            removeMealItem(mealType, itemId);
+            nameInput.focus();
+        }
+
+        async function saveAdvancedMenuNew() {
+            const date = document.getElementById('menuDateInput').value;
+            if (!date) {
+                alert('Vui lòng chọn ngày áp dụng');
+                return;
+            }
+
+            const lunchItems = advancedMenuState.lunch || [];
+            const dinnerItems = advancedMenuState.dinner || [];
+
+            if (lunchItems.length === 0 && dinnerItems.length === 0) {
+                alert('Vui lòng thêm ít nhất một bữa ăn');
+                return;
+            }
+
+            // Format meal items as formatted strings
+            const formatMealItems = (items) => {
+                if (items.length === 0) return '';
+                return items.map(item => item.name).join('\n');
+            };
+
+            const lunchStr = formatMealItems(lunchItems);
+            const dinnerStr = formatMealItems(dinnerItems);
+
+            try {
+                const res = await fetch('api/save_menu.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date,
+                        lunch: lunchStr,
+                        dinner: dinnerStr
+                    })
+                });
+                const r = await res.json();
+                const msg = document.getElementById('menuMsg');
+
+                if (r.status === 'success') {
+                    document.getElementById('currentMenuId').value = r.menu_id || 0;
+                    msg.innerHTML = '<div class="alert alert-primary mb-0">✓ Lưu bản nháp thành công</div>';
+                    setTimeout(() => msg.innerHTML = '', 3000);
+                    loadMenuApprovalQueue();
+                    // Reset form
+                    advancedMenuState.lunch = [];
+                    advancedMenuState.dinner = [];
+                    renderMealItemsTable('lunch');
+                    renderMealItemsTable('dinner');
+                    
+                    // Scroll to ingredients section
+                    setTimeout(() => {
+                        const ingredientsCard = document.querySelector('.card-header:has(+ .card-body .alert-info)');
+                        if (ingredientsCard) {
+                            ingredientsCard.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 500);
+                    
+                    // Update current menu summary
+                    updateCurrentMenuSummary(date, lunchItems, dinnerItems);
+                } else {
+                    msg.innerHTML = `<div class="alert alert-danger mb-0">❌ ${r.message}</div>`;
+                }
+            } catch (e) {
+                document.getElementById('menuMsg').innerHTML = `<div class="alert alert-danger mb-0">❌ Lỗi: ${e.message}</div>`;
+            }
+        }
+
+        // OLD MENU FORM - DISABLED (but keep for reference in case needed)
+        // document.getElementById('menuForm')?.addEventListener('submit', ...)
+
+        document.getElementById('btnSubmitMenuApproval')?.addEventListener('click', async () => {
+            const menuId = parseInt(document.getElementById('currentMenuId').value || 0);
+            if (!menuId) {
+                alert('Vui lòng lưu bản nháp trước');
+                return;
+            }
+            await saveMenuIngredientsForDate();
+            await submitMenuForApproval(menuId);
+        });
+
+        // MENU INGREDIENT MAPPING
+        async function loadIngredientOptions() {
+            try {
+                const res = await fetch('api/get_ingredients.php');
+                const r = await res.json();
+                if (r.status === 'success' && Array.isArray(r.data)) {
+                    ingredientOptions = r.data.map(i => ({ id: i.id, name: i.name, unit: i.unit }));
+                    renderIngredientSelects();
+                }
+            } catch (err) {}
+        }
+
+        function renderIngredientSelects() {
+            ['lunch', 'dinner'].forEach(type => {
+                const sel = document.getElementById(`menuIngredientSelect-${type}`);
+                if (!sel) return;
+                sel.innerHTML = '<option value="">-- Chọn nguyên liệu --</option>' +
+                    ingredientOptions.map(i => `<option value="${i.id}">${i.name} (${i.unit || ''})</option>`).join('');
+            });
+        }
+
+        function renderMenuIngredientTable(mealType) {
+            const tbody = document.getElementById(`menuIngredientBody-${mealType}`);
+            if (!tbody) return;
+            const items = menuIngredientState[mealType] || [];
+            if (items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-2 small">Chưa thêm</td></tr>';
+                return;
+            }
+            tbody.innerHTML = items.map(item => {
+                const ing = ingredientOptions.find(i => i.id === item.ingredient_id);
+                const name = ing ? ing.name : `ID ${item.ingredient_id}`;
+                const unit = ing ? (ing.unit || '-') : '-';
+                return `<tr>
+                    <td><small>${escapeHtml(name)}</small></td>
+                    <td class="text-center"><small>${item.quantity_needed}</small></td>
+                    <td class="text-center"><small class="text-muted">${unit}</small></td>
+                    <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="removeMenuIngredient('${mealType}', ${item.ingredient_id})" style="padding: 2px 6px;">✖</button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function addMenuIngredient(mealType) {
+            const sel = document.getElementById(`menuIngredientSelect-${mealType}`);
+            const qtyEl = document.getElementById(`menuIngredientQty-${mealType}`);
+            const ingredientId = parseInt(sel?.value || 0);
+            const qty = parseFloat(qtyEl?.value || 0);
+            if (!ingredientId || !qty || qty <= 0) return;
+            const items = menuIngredientState[mealType] || [];
+            const existing = items.find(i => i.ingredient_id === ingredientId);
+            if (existing) {
+                existing.quantity_needed = qty;
+            } else {
+                items.push({ ingredient_id: ingredientId, quantity_needed: qty });
+            }
+            menuIngredientState[mealType] = items;
+            renderMenuIngredientTable(mealType);
+            if (qtyEl) qtyEl.value = '';
+            if (sel) sel.value = '';
+        }
+
+        function removeMenuIngredient(mealType, ingredientId) {
+            menuIngredientState[mealType] = (menuIngredientState[mealType] || []).filter(i => i.ingredient_id !== ingredientId);
+            renderMenuIngredientTable(mealType);
+        }
+
+        async function saveMenuIngredientsForDate() {
+            const date = document.getElementById('menuDateInput')?.value;
+            if (!date) return;
+            await Promise.all(['lunch', 'dinner'].map(mt => saveMenuIngredients(date, mt)));
+        }
+
+        async function saveMenuIngredients(date, mealType) {
+            const items = menuIngredientState[mealType] || [];
+            try {
+                const res = await fetch('api/set_menu_ingredients.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ menu_date: date, meal_type: mealType, items })
+                });
+                const r = await res.json();
+                const msg = document.getElementById('menuIngredientMsg');
+                if (r.status === 'success') {
+                    if (msg) msg.innerHTML = '<div class="alert alert-primary mb-0">✓ Đã lưu nguyên liệu cho thực đơn</div>';
+                } else if (msg) {
+                    msg.innerHTML = `<div class="alert alert-secondary mb-0">⚠️ ${r.message || 'Không lưu được nguyên liệu'}</div>`;
+                }
+                setTimeout(() => { if (msg) msg.innerHTML = ''; }, 3000);
+            } catch (err) {}
+        }
+
+        async function loadMenuIngredientsForDate(date) {
+            try {
+                const res = await fetch(`api/get_menu_ingredients.php?menu_date=${date}`);
+                const r = await res.json();
+                if (r.status === 'success' && Array.isArray(r.data)) {
+                    menuIngredientState.lunch = r.data.filter(x => x.meal_type === 'lunch').map(x => ({ ingredient_id: parseInt(x.ingredient_id), quantity_needed: parseFloat(x.quantity_needed) }));
+                    menuIngredientState.dinner = r.data.filter(x => x.meal_type === 'dinner').map(x => ({ ingredient_id: parseInt(x.ingredient_id), quantity_needed: parseFloat(x.quantity_needed) }));
+                    renderMenuIngredientTable('lunch');
+                    renderMenuIngredientTable('dinner');
+                }
+            } catch (err) {}
+        }
+
+        document.getElementById('btnAddMenuIngredient-lunch')?.addEventListener('click', (e) => { e.preventDefault(); addMenuIngredient('lunch'); });
+        document.getElementById('btnAddMenuIngredient-dinner')?.addEventListener('click', (e) => { e.preventDefault(); addMenuIngredient('dinner'); });
+        document.getElementById('menuDateInput')?.addEventListener('change', (e) => {
+            const date = e.target.value;
+            loadMenuIngredientsForDate(date);
+        });
+        document.getElementById('btnSaveMenuIngredients')?.addEventListener('click', async () => {
+            await saveMenuIngredientsForDate();
+        });
+
+        // INGREDIENTS
+        document.getElementById('ingredientForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('ingrName').value.trim(),
+                type: document.getElementById('ingrType').value,
+                unit: document.getElementById('ingrUnit').value.trim(),
+                quantity: parseFloat(document.getElementById('ingrQty').value),
+                price: parseFloat(document.getElementById('ingrPrice').value),
+                date: document.getElementById('ingrDate').value
+            };
+
+            // Validation
+            if (!data.name || !data.type || !data.unit || !data.quantity || !data.price) {
+                document.getElementById('ingrMsg').innerHTML = '<div class="alert alert-danger mb-0">❌ Vui lòng điền đầy đủ thông tin</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch('api/add_ingredient.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+                
+                const r = await res.json();
+                const msg = document.getElementById('ingrMsg');
+
+                if (r.status === 'success') {
+                    document.getElementById('ingredientForm').reset();
+                    document.getElementById('ingrDate').value = new Date().toISOString().split('T')[0];
+                    msg.innerHTML = '<div class="alert alert-primary mb-0">✓ Thêm thành công</div>';
+                    setTimeout(() => msg.innerHTML = '', 3000);
+                    loadIngredients();
+                } else {
+                    msg.innerHTML = `<div class="alert alert-danger mb-0">❌ ${r.message || 'Lỗi không xác định'}</div>`;
+                }
+            } catch (e) {
+                console.error('Ingredient error:', e);
+                document.getElementById('ingrMsg').innerHTML = `<div class="alert alert-danger mb-0">❌ Lỗi: ${e.message}</div>`;
+            }
+        });
+
+        async function loadIngredients() {
+            try {
+                const res = await fetch('api/get_ingredients.php');
+                const r = await res.json();
+                const tbody = document.getElementById('ingredientTableBody');
+
+                if (r.status !== 'success' || !Array.isArray(r.data) || r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="11" class="text-center py-3 text-muted">Chưa có dữ liệu</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = r.data.map(i => {
+                    const pricing = latestOrderPricing.find(p => p.ingredient === i.name) || {};
+                    const basePrice = parseFloat(pricing.unitPrice ?? i.price ?? 0) || 0;
+                    const vatPercent = pricing.vatPercent ?? DEFAULT_VAT_PERCENT;
+                    const priceAfterVat = Math.round(basePrice * (1 + vatPercent / 100));
+                    const expiry = pricing.expectedDate ? pricing.expectedDate.substring(0, 10) : '-';
+                    const notes = pricing.notes || '-';
+                    const desc = i.type || 'Nguyên liệu';
+                    const unitLabel = i.unit || '-';
+                    return `<tr>
+                        <td>${i.name}</td>
+                        <td><small>${desc}</small></td>
+                        <td>${i.quantity} ${unitLabel}</td>
+                        <td>${unitLabel}</td>
+                        <td>₫${Math.round(basePrice).toLocaleString('vi-VN')}</td>
+                        <td>${vatPercent}%</td>
+                        <td>₫${priceAfterVat.toLocaleString('vi-VN')}</td>
+                        <td><small>${expiry}</small></td>
+                        <td><small>${notes}</small></td>
+                        <td><small>${i.date}</small></td>
+                        <td><button class="btn btn-sm btn-outline-secondary" onclick="deleteIngredient(${i.id})">Xóa</button></td>
+                    </tr>`;
+                }).join('');
+            } catch (err) {}
+        }
+
+        async function deleteIngredient(id) {
+            if (!confirm('Xác nhận xóa?')) return;
+            try {
+                await fetch('api/delete_ingredient.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                loadIngredients();
+            } catch (e) {}
+        }
+
+        // LOAD LOW STOCK ALERTS
+        async function loadLowStockAlerts() {
+            try {
+                const res = await fetch('api/get_ingredients.php');
+                const r = await res.json();
+                const div = document.getElementById('lowStockAlerts');
+                
+                if (r.status !== 'success' || !r.data) {
+                    div.innerHTML = '<div class="text-muted">Không có dữ liệu</div>';
+                    return;
+                }
+
+                let lowStocks = r.data.filter(i => i.stock_status === 'low' || i.stock_status === 'warning');
+                
+                if (lowStocks.length === 0) {
+                    div.innerHTML = '✅ Tất cả nguyên liệu đều đủ';
+                    return;
+                }
+
+                div.innerHTML = lowStocks.map(i => {
+                    const statusBadge = i.stock_status === 'low' 
+                        ? '<span class="badge bg-secondary">Tồn Kho Thấp</span>'
+                        : '<span class="badge bg-secondary">Cảnh Báo</span>';
+                    return `<div class="mb-2 p-2 bg-light border-start border-2 border-secondary">
+                        <strong>${i.name}</strong> ${statusBadge}<br>
+                        <small>Tồn Kho: <strong>${i.quantity_in_stock} ${i.unit}</strong> | Mức Tối Thiểu: ${i.min_threshold} ${i.unit}</small>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                document.getElementById('lowStockAlerts').innerHTML = '⚠️ Lỗi tải dữ liệu';
+            }
+        }
+
+        // LOAD MENU NEEDS
+        async function loadMenuNeeds() {
+            const date = document.getElementById('menuNeedDate').value;
+            const mealType = document.getElementById('menuNeedMeal').value;
+            
+            if (!date) {
+                alert('Vui lòng chọn ngày');
+                return;
+            }
+
+            try {
+                let url = `api/calculate_ingredient_needs.php?date=${date}`;
+                if (mealType) url += `&meal_type=${mealType}`;
+                
+                const res = await fetch(url);
+                const r = await res.json();
+                const tbody = document.getElementById('menuNeedsBody');
+
+                if (r.status !== 'success' || !r.data || r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-2 text-muted">Chưa cấu hình nguyên liệu cho thực đơn</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = r.data.map(item => `<tr class="${item.shortage > 0 ? '' : ''}">
+                    <td><strong>${item.ingredient}</strong> (${item.meal_type})</td>
+                    <td>${item.total_needed} ${item.unit}</td>
+                    <td>${item.current_stock} ${item.unit}</td>
+                    <td class="text-secondary"><strong>${item.shortage} ${item.unit}</strong></td>
+                    <td>₫${parseInt(item.unit_price).toLocaleString('vi-VN')}</td>
+                    <td>₫${parseInt(item.total_cost).toLocaleString('vi-VN')}</td>
+                </tr>`).join('');
+            } catch (err) {
+                document.getElementById('menuNeedsBody').innerHTML = '<tr><td colspan="6" class="text-center text-secondary">⚠️ Lỗi tải dữ liệu</td></tr>';
+            }
+        }
+
+        async function deductMenuIngredients() {
+            const date = document.getElementById('menuNeedDate').value || document.getElementById('menuDateInput').value;
+            const mealType = document.getElementById('menuNeedMeal').value || '';
+            if (!date) {
+                alert('Vui lòng chọn ngày trước khi trừ kho');
+                return;
+            }
+            if (!confirm('Xác nhận trừ kho cho thực đơn ngày ' + date + (mealType ? ` (${mealType})` : '') + '?')) return;
+            try {
+                const res = await fetch('api/deduct_menu_ingredients.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ menu_date: date, meal_type: mealType })
+                });
+                const r = await res.json();
+                if (r.status === 'success') {
+                    alert(r.message || 'Đã trừ kho thành công');
+                    loadIngredients();
+                    loadLowStockAlerts();
+                    loadMenuNeeds();
+                } else {
+                    alert(r.message || 'Không thể trừ kho');
+                }
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        // LOAD SUPPLIERS FOR DROPDOWN
+        async function loadSuppliersForOrder() {
+            try {
+                const res = await fetch('api/get_suppliers.php');
+                const r = await res.json();
+                const select = document.getElementById('orderSupplierId');
+                
+                if (r.status === 'success' && r.data) {
+                    select.innerHTML = '<option value="">-- Chọn NCC --</option>' +
+                        r.data.map(s => `<option value="${s.id}">${s.company}</option>`).join('');
+                }
+            } catch (err) {
+                console.error('Error loading suppliers:', err);
+            }
+        }
+
+        // LOAD ORDERS
+        async function loadOrders() {
+            try {
+                const res = await fetch('api/get_ingredient_orders.php');
+                const r = await res.json();
+                const tbody = document.getElementById('orderTableBody');
+                
+                if (r.status !== 'success' || !r.data || r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center py-2 text-muted">Chưa có đơn hàng</td></tr>';
+                    latestOrderPricing = [];
+                    loadCostPrice();
+                    return;
+                }
+
+                latestOrderPricing = r.data.map(order => ({
+                    ingredient: order.ingredient_name,
+                    supplier: order.supplier_name || '-',
+                    unitPrice: parseFloat(order.unit_price || 0) || 0,
+                    vatPercent: order.vat_percent ? parseFloat(order.vat_percent) : DEFAULT_VAT_PERCENT,
+                    expectedDate: order.expected_date,
+                    notes: order.notes || ''
+                }));
+
+                tbody.innerHTML = r.data.map(order => {
+                    const vatPercent = order.vat_percent ? parseFloat(order.vat_percent) : DEFAULT_VAT_PERCENT;
+                    const unitPrice = parseFloat(order.unit_price || 0) || 0;
+                    const priceAfterVat = Math.round(unitPrice * (1 + vatPercent / 100));
+
+                    let statusBadge = '<span class="badge bg-secondary">⏳ Chờ</span>';
+                    if (order.status === 'received') {
+                        statusBadge = '<span class="badge bg-primary">✓ Đã Nhận</span>';
+                    } else if (order.status === 'cancelled') {
+                        statusBadge = '<span class="badge bg-secondary">❌ Hủy</span>';
+                    }
+
+                    let actionBtn = '';
+                    if (order.status === 'pending') {
+                        actionBtn = `<button class="btn btn-xs btn-primary" onclick="markOrderReceived(${order.id})">Nhận Hàng</button>`;
+                    }
+
+                    return `<tr>
+                        <td>${order.ingredient_name}</td>
+                        <td>${order.supplier_name || '-'}</td>
+                        <td>${order.quantity_ordered} ${order.unit}</td>
+                        <td>₫${Math.round(unitPrice).toLocaleString('vi-VN')}</td>
+                        <td>${vatPercent}%</td>
+                        <td>₫${priceAfterVat.toLocaleString('vi-VN')}</td>
+                        <td>${statusBadge}</td>
+                        <td><small>${order.order_date.substring(0,10)}</small></td>
+                        <td>${actionBtn}</td>
+                    </tr>`;
+                }).join('');
+
+                loadCostPrice();
+            } catch (err) {
+                document.getElementById('orderTableBody').innerHTML = '<tr><td colspan="9" class="text-center text-secondary">⚠️ Lỗi tải dữ liệu</td></tr>';
+                latestOrderPricing = [];
+                loadCostPrice();
+            }
+        }
+
+        // HANDLE ORDER SUBMISSION
+        document.getElementById('orderForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                ingredient_name: document.getElementById('orderIngrName').value.trim(),
+                supplier_id: parseInt(document.getElementById('orderSupplierId').value),
+                quantity_ordered: parseFloat(document.getElementById('orderQty').value),
+                unit: document.getElementById('orderUnit').value.trim(),
+                unit_price: parseFloat(document.getElementById('orderPrice').value || 0),
+                expected_date: document.getElementById('orderExpectedDate').value,
+                notes: document.getElementById('orderNotes').value.trim()
+            };
+
+            if (!data.ingredient_name || !data.supplier_id || !data.quantity_ordered || !data.unit) {
+                document.getElementById('orderMsg').innerHTML = '<div class="alert alert-danger mb-0">❌ Vui lòng điền đủ thông tin bắt buộc</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch('api/create_ingredient_order.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const r = await res.json();
+                const msg = document.getElementById('orderMsg');
+
+                if (r.status === 'success') {
+                    msg.innerHTML = '<div class="alert alert-primary mb-0">✅ Đơn hàng đã được tạo</div>';
+                    document.getElementById('orderForm').reset();
+                    setTimeout(() => msg.innerHTML = '', 3000);
+                    loadOrders();
+                } else {
+                    msg.innerHTML = `<div class="alert alert-danger mb-0">❌ ${r.message}</div>`;
+                }
+            } catch (e) {
+                document.getElementById('orderMsg').innerHTML = `<div class="alert alert-danger mb-0">❌ Lỗi: ${e.message}</div>`;
+            }
+        });
+
+        // MARK ORDER AS RECEIVED
+        async function markOrderReceived(orderId) {
+            if (!confirm('Xác nhận đã nhận hàng?')) return;
+            
+            try {
+                const res = await fetch('api/receive_ingredient_order.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId })
+                });
+                const r = await res.json();
+                
+                if (r.status === 'success') {
+                    alert('✅ ' + r.message);
+                    loadOrders();
+                    loadLowStockAlerts();
+                } else {
+                    alert('❌ ' + r.message);
+                }
+            } catch (e) {
+                alert('❌ Lỗi: ' + e.message);
+            }
+        }
+
+        // COST PRICE TABLE
+        function loadCostPrice() {
+            const tbody = document.getElementById('costPriceBody');
+            const summary = document.getElementById('costPriceSummary');
+            if (!tbody) return;
+
+            if (!latestOrderPricing || latestOrderPricing.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Chưa có đơn hàng để tính giá</td></tr>';
+                if (summary) summary.textContent = '';
+                return;
+            }
+
+            tbody.innerHTML = latestOrderPricing.map(p => {
+                const priceAfterVat = Math.round(p.unitPrice * (1 + (p.vatPercent || DEFAULT_VAT_PERCENT) / 100));
+                const expiry = p.expectedDate ? p.expectedDate.substring(0, 10) : '-';
+                const notes = p.notes || '-';
+                return `<tr>
+                    <td>${p.ingredient}</td>
+                    <td>${p.supplier}</td>
+                    <td>₫${Math.round(p.unitPrice).toLocaleString('vi-VN')}</td>
+                    <td>${p.vatPercent || DEFAULT_VAT_PERCENT}%</td>
+                    <td>₫${priceAfterVat.toLocaleString('vi-VN')}</td>
+                    <td><small>${expiry}</small></td>
+                    <td><small>${notes}</small></td>
+                </tr>`;
+            }).join('');
+
+            if (summary) {
+                summary.textContent = `Hiển thị ${latestOrderPricing.length} dòng | VAT mặc định ${DEFAULT_VAT_PERCENT}% khi chưa có dữ liệu.`;
+            }
+        }
+
+        // SUPPLIERS
+        document.getElementById('supplierForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                company: document.getElementById('supplName').value.trim(),
+                contact_person: document.getElementById('supplContact').value.trim(),
+                phone: document.getElementById('supplPhone').value.trim(),
+                email: document.getElementById('supplEmail').value.trim(),
+                address: document.getElementById('supplAddress').value.trim()
+            };
+
+            // Validation
+            if (!data.company || !data.contact_person || !data.phone || !data.address) {
+                document.getElementById('supplMsg').innerHTML = '<div class="alert alert-danger mb-0">❌ Vui lòng điền đầy đủ thông tin bắt buộc</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch('api/add_supplier.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+                
+                const r = await res.json();
+                const msg = document.getElementById('supplMsg');
+
+                if (r.status === 'success') {
+                    document.getElementById('supplierForm').reset();
+                    msg.innerHTML = '<div class="alert alert-primary mb-0">✓ Thêm thành công</div>';
+                    setTimeout(() => msg.innerHTML = '', 3000);
+                    loadSuppliers();
+                } else {
+                    msg.innerHTML = `<div class="alert alert-danger mb-0">❌ ${r.message || 'Lỗi không xác định'}</div>`;
+                }
+            } catch (e) {
+                console.error('Supplier error:', e);
+                document.getElementById('supplMsg').innerHTML = `<div class="alert alert-danger mb-0">❌ Lỗi: ${e.message}</div>`;
+            }
+        });
+
+        async function loadSuppliers() {
+            try {
+                const res = await fetch('api/get_suppliers.php');
+                const r = await res.json();
+                const tbody = document.getElementById('supplierTableBody');
+
+                if (r.status !== 'success' || !Array.isArray(r.data) || r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Chưa có dữ liệu</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = r.data.map(s => `<tr>
+                    <td>${s.company}</td>
+                    <td>${s.contact_person}</td>
+                    <td>${s.phone}</td>
+                    <td><small>${s.email}</small></td>
+                    <td><small>${s.address || '-'}</small></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="openSupplierEditModal(${s.id}, '${s.company.replace(/'/g, "\\'")}', '${s.contact_person.replace(/'/g, "\\'")}', '${s.phone.replace(/'/g, "\\'")}', '${(s.email || '').replace(/'/g, "\\'")}', '${(s.address || '').replace(/'/g, "\\'")}')" data-bs-toggle="tooltip" title="Chỉnh sửa">✏️</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="deleteSupplier(${s.id})">Xóa</button>
+                    </td>
+                </tr>`).join('');
+            } catch (err) {}
+        }
+
+        async function deleteSupplier(id) {
+            if (!confirm('Xác nhận xóa?')) return;
+            try {
+                await fetch('api/delete_supplier.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                loadSuppliers();
+            } catch (e) {}
+        }
+
+        function openSupplierEditModal(id, company, contact, phone, email, address) {
+            document.getElementById('editSupplierId').value = id;
+            document.getElementById('editSupplName').value = company || '';
+            document.getElementById('editSupplContact').value = contact || '';
+            document.getElementById('editSupplPhone').value = phone || '';
+            document.getElementById('editSupplEmail').value = email || '';
+            document.getElementById('editSupplAddress').value = address || '';
+            document.getElementById('editSupplMsg').innerHTML = '';
+            new bootstrap.Modal(document.getElementById('supplierEditModal')).show();
+        }
+
+        async function submitSupplierEdit() {
+            const id = parseInt(document.getElementById('editSupplierId').value);
+            const data = {
+                id: id,
+                company: document.getElementById('editSupplName').value.trim(),
+                contact_person: document.getElementById('editSupplContact').value.trim(),
+                phone: document.getElementById('editSupplPhone').value.trim(),
+                email: document.getElementById('editSupplEmail').value.trim(),
+                address: document.getElementById('editSupplAddress').value.trim()
+            };
+
+            if (!data.company || !data.contact_person || !data.phone) {
+                document.getElementById('editSupplMsg').innerHTML = '<div class="alert alert-danger mb-0">❌ Vui lòng điền đầy đủ thông tin bắt buộc</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch('api/update_supplier.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+                
+                const r = await res.json();
+                const msg = document.getElementById('editSupplMsg');
+
+                if (r.status === 'success') {
+                    msg.innerHTML = '<div class="alert alert-primary mb-0">✓ Cập nhật thành công</div>';
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('supplierEditModal')).hide();
+                        loadSuppliers();
+                    }, 1000);
+                } else {
+                    msg.innerHTML = `<div class="alert alert-danger mb-0">❌ ${r.message || 'Lỗi không xác định'}</div>`;
+                }
+            } catch (e) {
+                console.error('Update supplier error:', e);
+                document.getElementById('editSupplMsg').innerHTML = `<div class="alert alert-danger mb-0">❌ Lỗi: ${e.message}</div>`;
+            }
+        }
+
+        // COSTS
+        async function loadCostStats() {
+            try {
+                const res = await fetch('api/get_cost_stats.php');
+                const r = await res.json();
+                if (r.status === 'success') {
+                    document.getElementById('costToday').innerText = '₫' + (parseInt(r.today || 0)).toLocaleString('vi-VN');
+                    document.getElementById('costWeek').innerText = '₫' + (parseInt(r.week || 0)).toLocaleString('vi-VN');
+                    document.getElementById('costMonth').innerText = '₫' + (parseInt(r.month || 0)).toLocaleString('vi-VN');
+                    document.getElementById('costPerMeal').innerText = '₫' + (parseInt(r.per_meal || 0)).toLocaleString('vi-VN');
+                }
+            } catch (err) {}
+        }
+
+        // COMPLAINTS
+        async function loadComplaints() {
+            try {
+                const res = await fetch('api/get_complaints.php');
+                const r = await res.json();
+                const tbody = document.getElementById('complaintTableBody');
+
+                if (r.status !== 'success' || !Array.isArray(r.data) || r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Chưa có khiếu nại</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = r.data.map(c => {
+                    const badge = c.status === 'resolved' 
+                        ? '<span class="badge bg-primary">✓ Giải Quyết</span>'
+                        : (c.status === 'rejected'
+                            ? '<span class="badge bg-secondary">❌ Từ Chối</span>'
+                            : '<span class="badge bg-secondary">⏳ Chờ Xử Lý</span>');
+                    return `<tr>
+                        <td><small>${c.created_date}</small></td>
+                        <td>${c.employee_name}</td>
+                        <td><small>${c.complaint_type}</small></td>
+                        <td><small>${c.description.substring(0, 30)}...</small></td>
+                        <td>${badge}</td>
+                        <td><button class="btn btn-sm btn-info" onclick="viewComplaintDetail(${c.id})">Chi Tiết</button></td>
+                    </tr>`;
+                }).join('');
+            } catch (err) {}
+        }
+
+        async function viewComplaintDetail(complaintId) {
+            try {
+                const res = await fetch('api/get_complaint_detail.php?id=' + complaintId);
+                const r = await res.json();
+                if (r.status === 'success') {
+                    const c = r.data;
+                    let detail = `<p><strong>Nhân Viên:</strong> ${c.employee_name} (${c.employee_id})</p>
+                        <p><strong>Ngày:</strong> ${c.created_date}</p>
+                        <p><strong>Loại:</strong> ${c.complaint_type}</p>
+                        <p><strong>Chi Tiết:</strong> ${c.description}</p>`;
+                    
+                    if (c.images && c.images.length > 0) {
+                        detail += `<p><strong>Hình Ảnh:</strong><br>`;
+                        c.images.forEach(img => {
+                            detail += `<img src="${img}" style="max-width: 100px; margin-right: 10px; cursor: pointer;" onclick="window.open(this.src)">`;
+                        });
+                        detail += `</p>`;
+                    }
+                    
+                    document.getElementById('complaintDetail').innerHTML = detail;
+                    document.getElementById('complaintDetailModal').dataset.complaintId = complaintId;
+                    new bootstrap.Modal(document.getElementById('complaintDetailModal')).show();
+                }
+            } catch (err) {}
+        }
+
+        document.getElementById('complaintReplyForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const complaintId = document.getElementById('complaintDetailModal').dataset.complaintId;
+            const data = {
+                complaint_id: complaintId,
+                status: document.getElementById('replyStatus').value,
+                response_note: document.getElementById('replyNote').value
+            };
+
+            try {
+                const res = await fetch('api/resolve_complaint.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const r = await res.json();
+                if (r.status === 'success') {
+                    bootstrap.Modal.getInstance(document.getElementById('complaintDetailModal')).hide();
+                    alert('Đã lưu xử lý');
+                    loadComplaints();
+                }
+            } catch (e) {
+                alert('Lỗi: ' + e.message);
+            }
+        });
+
+        // Load on tab switch
+        document.getElementById('btn-ingredients-toggle')?.addEventListener('click', () => {
+            const submenu = document.getElementById('submenu-ingredients');
+            const toggleIcon = document.querySelector('#btn-ingredients-toggle .menu-toggle-icon');
+            submenu.classList.toggle('show');
+            toggleIcon.classList.toggle('expanded');
+        });
+
+        // Submenu items - load ingredients data
+        document.querySelectorAll('.submenu-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.submenu-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                setTimeout(() => {
+                    loadIngredients();
+                    loadLowStockAlerts();
+                    loadOrders();
+                }, 100);
+            });
+        });
+
+        // Auto-activate first ingredient subtab
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstIngrBtn = document.querySelector('.submenu-btn');
+            if (firstIngrBtn) firstIngrBtn.click();
+        });
+
+        // Original code commented out - replaced with submenu handling above
+        // document.getElementById('btn-tab-ingredients')?.addEventListener('click', () => { });
+        
+        document.getElementById('btn-tab-suppliers')?.addEventListener('click', () => { setTimeout(loadSuppliers, 100); });
+        document.getElementById('btn-tab-cost')?.addEventListener('click', () => { 
+            setTimeout(() => {
+                loadCostStats();
+                loadCostPrice();
+            }, 100);
+        });
+        document.getElementById('btn-tab-complaints')?.addEventListener('click', () => { setTimeout(loadComplaints, 100); });
+
+        // View Profile Function
+        async function viewProfile(userId) {
+            const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const content = document.getElementById('profileContent');
+            content.innerHTML = '<div class="text-center p-4"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">Đang tải...</p></div>';
+            modal.show();
+            
+            try {
+                const res = await fetch(`api/get_user_details.php?id=${userId}`);
+                const result = await res.json();
+                
+                if (result.status !== 'success') {
+                    content.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle"></i> Lỗi: ${result.message || 'Không thể tải dữ liệu'}</div>`;
+                    return;
+                }
+                
+                const u = result.user;
+                const d = result.details;
+                
+                let html = `
+                    <div class="row g-4">
+                        <div class="col-md-4 text-center">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body p-3 bg-light text-center rounded">
+                                    <img src="${d.photo_path || 'https://via.placeholder.com/150'}" class="img-fluid rounded border mb-3" style="max-height: 200px; width: 100%; object-fit: contain;">
+                                    <h5 class="fw-bold mb-2">${d.full_name}</h5>
+                                    <span class="badge bg-primary text-white">Nhân Viên Bếp</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2"><i class="bi bi-person-lines-fill me-2"></i>Thông Tin Chi Tiết</h6>
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                    <tr><td class="text-muted fw-bold" style="width: 30%;">Email</td><td>${u.email}</td></tr>
+                                    <tr><td class="text-muted fw-bold">Tên Phòng Ban</td><td class="fw-bold text-primary">${d.hall_name || '-'}</td></tr>
+                                    <tr><td class="text-muted fw-bold">Số Điện Thoại</td><td>${d.phone || '-'}</td></tr>
+                                    <tr><td colspan="2" class="pt-3 pb-1"><h6 class="text-muted small fw-bold text-uppercase border-bottom pb-1">Thông Tin Cá Nhân</h6></td></tr>
+                                    <tr><td class="text-muted fw-bold">Số CMND/CCCD</td><td>${d.nid_number || '-'}</td></tr>
+                                    <tr><td class="text-muted fw-bold">Ngày Sinh</td><td>${d.dob || '-'}</td></tr>
+                                    <tr><td class="text-muted fw-bold">Giới Tính</td><td>${d.gender || '-'}</td></tr>
+                                    <tr><td colspan="2" class="pt-3 pb-1"><h6 class="text-muted small fw-bold text-uppercase border-bottom pb-1">Địa Chỉ</h6></td></tr>
+                                    <tr><td class="text-muted fw-bold">Địa Chỉ Hiện Tại</td><td>${d.present_address || '-'}</td></tr>
+                                    <tr><td class="text-muted fw-bold">Địa Chỉ Thường Trú</td><td>${d.permanent_address || '-'}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                content.innerHTML = html;
+            } catch (err) {
+                console.error('Error loading profile:', err);
+                content.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle"></i> Lỗi: ${err.message}</div>`;
+            }
+        }
+
+        // Logout function
+        async function logout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+                try {
+                    await fetch('api/logout.php');
+                    window.location.href = 'auth/login.html';
+                } catch (e) {
+                    console.error('Logout error:', e);
+                    window.location.href = 'auth/login.html';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

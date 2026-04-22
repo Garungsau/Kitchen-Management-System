@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng dẫn Quy trình - Hệ thống quản lý bếp ăn CPC1</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --success: #198754;
+            --info: #0dcaf0;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            padding-top: 80px;
+        }
+
+        .guide-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0055cc 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .guide-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .guide-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .role-tabs {
+            margin-bottom: 40px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .role-btn {
+            padding: 10px 25px;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .role-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+        }
+
+        .process-section {
+            display: none;
+        }
+
+        .process-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .step-card {
+            background: white;
+            border-left: 5px solid var(--primary);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .step-card.success {
+            border-left-color: var(--success);
+        }
+
+        .step-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .step-card.info {
+            border-left-color: var(--info);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--primary) 0%, #0055cc 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-card.success .step-number {
+            background: linear-gradient(135deg, var(--success) 0%, #0d6d2e 100%);
+        }
+
+        .step-card.warning .step-number {
+            background: linear-gradient(135deg, var(--warning) 0%, #cc9900 100%);
+        }
+
+        .step-card.info .step-number {
+            background: linear-gradient(135deg, var(--info) 0%, #0aa2c0 100%);
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .step-description {
+            color: #666;
+            margin: 12px 0 0 60px;
+            line-height: 1.6;
+        }
+
+        .step-details {
+            margin: 15px 0 0 60px;
+            padding: 12px 15px;
+            background: var(--light-bg);
+            border-radius: 6px;
+            border-left: 3px solid #ddd;
+        }
+
+        .step-details ul, .step-details ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .step-details li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            color: #856404;
+        }
+
+        .highlight-box.success {
+            background: #d4edda;
+            border-left-color: var(--success);
+            color: #155724;
+        }
+
+        .highlight-box.danger {
+            background: #f8d7da;
+            border-left-color: var(--danger);
+            color: #721c24;
+        }
+
+        .highlight-box.info {
+            background: #d1ecf1;
+            border-left-color: var(--info);
+            color: #0c5460;
+        }
+
+        .icon-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .icon-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .icon-list i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-right: 12px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+            opacity: 0.2;
+        }
+
+        .timeline-item {
+            margin-bottom: 30px;
+            margin-left: 70px;
+            position: relative;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -47px;
+            top: 5px;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--light-bg);
+        }
+
+        .badge-custom {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge-custom.primary {
+            background: #e7f1ff;
+            color: var(--primary);
+        }
+
+        .badge-custom.success {
+            background: #d1e7dd;
+            color: var(--success);
+        }
+
+        .badge-custom.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .faq-section {
+            margin-top: 40px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-question {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            margin-top: 5px;
+            background: white;
+            border-left: 3px solid var(--primary);
+            display: none;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .faq-answer.show {
+            display: block;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .footer-section {
+            background: var(--light-bg);
+            margin-top: 60px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .guide-header h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.5rem; }
+            .role-btn { padding: 8px 15px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="navbar-container"></div>
+
+<div class="guide-header">
+    <h1><i class="bi bi-book-half me-3"></i>Hướng dẫn Quy trình Hệ thống</h1>
+    <p>Tìm hiểu các quy trình chi tiết để sử dụng hệ thống một cách hiệu quả nhất</p>
+</div>
+
+<div class="container">
+    <div class="role-tabs">
+        <button class="role-btn active" onclick="switchRole('employee')">
+            <i class="bi bi-person-badge me-2"></i>Nhân viên
+        </button>
+        <button class="role-btn" onclick="switchRole('admin')">
+            <i class="bi bi-shield-lock me-2"></i>Admin
+        </button>
+        <button class="role-btn" onclick="switchRole('kitchen')">
+            <i class="bi bi-cup-hot me-2"></i>Bếp
+        </button>
+    </div>
+
+    <!-- NHÂN VIÊN SECTION -->
+    <div id="employee-process" class="process-section active">
+        <h2 class="section-title"><i class="bi bi-person-fill me-2"></i>Quy trình Nhân viên</h2>
+
+        <!-- Đăng ký suất ăn -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Đăng ký Suất ăn</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Đăng ký suất ăn cho ngày hôm sau</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Đăng nhập vào trang điều hành (<code>employee_dashboard.html</code>)</li>
+                    <li>Tìm phần <strong>"Đăng ký suất ăn ngày mai"</strong> trong giao diện</li>
+                    <li>Chọn bữa ăn cần đăng ký:
+                        <ul>
+                            <li><strong>☀️ Trưa (11h - 13h)</strong> - Lunch</li>
+                            <li><strong>🌙 Tối (17h - 19h)</strong> - Dinner</li>
+                        </ul>
+                    </li>
+                    <li>Nhấn nút <strong class="text-success">📝 Đăng ký</strong></li>
+                    <li>Xác nhận thông báo thành công</li>
+                </ol>
+            </div>
+            <div class="highlight-box warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>⏰ Hạn chót:</strong> Phải đăng ký trước <strong>08:00 sáng hôm ăn</strong>. Sau thời gian này, nút đăng ký sẽ bị vô hiệu hóa.
+            </div>
+        </div>
+
+        <!-- Hủy đăng ký -->
+        <div class="step-card success">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Hủy Đăng ký Suất ăn</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Hủy đăng ký suất ăn nếu bạn không thể dự</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Vào phần <strong>"Danh sách Suất ăn"</strong> (Meal List)</li>
+                    <li>Tìm suất ăn muốn hủy (thường ở trạng thái <span class="badge badge-success">Đã đăng ký</span>)</li>
+                    <li>Nhấn nút <strong class="text-danger">❌ Hủy đăng ký</strong></li>
+                    <li>Xác nhận lựa chọn hủy trong hộp thoại</li>
+                    <li>Trạng thái sẽ thay đổi thành <span class="badge badge-warning">Đã hủy</span></li>
+                </ol>
+            </div>
+            <div class="highlight-box danger">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <strong>Lưu ý:</strong> Chỉ có thể hủy đăng ký trước 08:00 sáng ngày ăn. Sau thời gian này, bạn sẽ bị tính phí.
+            </div>
+        </div>
+
+        <!-- Check in -->
+        <div class="step-card info">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Check-in Suất ăn</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Xác nhận nhận suất ăn tại bếp</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Đến bếp vào thời gian suất ăn của bạn</li>
+                    <li>Chọn phần <strong>"Check-in Khuôn mặt"</strong> trên dashboard</li>
+                    <li>Cho camera nhìn vào khuôn mặt bạn (đợi khoảng 2-3 giây)</li>
+                    <li>Hệ thống sẽ nhận dạng khuôn mặt và tự động check-in</li>
+                    <li>Màn hình sẽ hiển thị <span class="badge badge-success">✅ Checked-in Thành công</span></li>
+                </ol>
+            </div>
+            <div class="highlight-box success">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Thông tin:</strong> Nếu hệ thống không nhận dạng được, bạn có thể nhập mã PIN hoặc ID nhân viên để check-in thủ công.
+            </div>
+        </div>
+
+        <!-- Xem lịch sử -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Xem Lịch sử & Thống kê</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Theo dõi lịch sử ăn và tính phí hàng tháng</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước xem:</strong>
+                <ul>
+                    <li><strong>📊 Thống kê tháng:</strong> Xem tổng số suất đã ăn, hủy, vắng mặt trong tháng</li>
+                    <li><strong>💰 Tính phí:</strong> Mỗi suất ăn được tính là <strong>60,000 VND</strong></li>
+                    <li><strong>📅 Lịch sử giao dịch:</strong> Xem danh sách tất cả các suất đã check-in</li>
+                    <li><strong>📈 Biểu đồ:</strong> Theo dõi xu hướng ăn qua các tháng</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FAQ Nhân viên -->
+        <div class="faq-section">
+            <h3 class="section-title"><i class="bi bi-question-circle me-2"></i>Câu hỏi Thường gặp</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Nếu tôi đăng ký rồi lại hủy, sẽ bị tính phí không?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Không. Nếu bạn hủy đăng ký <strong>trước 08:00 sáng ngày ăn</strong>, hoàn toàn không bị tính phí. Chúng tôi chỉ tính phí cho những suất ăn bạn thực sự kiểm tra.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Hệ thống nhận diện khuôn mặt có chính xác không?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Hệ thống có độ chính xác >95%. Nếu hệ thống không nhận ra, bạn hoàn toàn có thể check-in bằng PIN hoặc ID nhân viên. Ngoài ra, bạn có thể đăng ký lại khuôn mặt nếu muốn cải thiện khả năng nhận dạng.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Có thể đăng ký suất ăn cho nhiều ngày trước không?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Hiện tại, bạn chỉ có thể đăng ký suất ăn cho ngày hôm sau. Điều này giúp quản lý hàng ngày chính xác hơn. Mỗi ngày, bạn sẽ có cơ hội đăng ký cho ngày tiếp theo.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN SECTION -->
+    <div id="admin-process" class="process-section">
+        <h2 class="section-title"><i class="bi bi-shield-lock me-2"></i>Quy trình Admin</h2>
+
+        <!-- Quản lý tài khoản -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Quản lý Tài khoản Nhân viên</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Tạo, duyệt, khóa/mở khóa tài khoản nhân viên</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Truy cập <strong>Admin Dashboard</strong> → Phần <strong>"Tài khoản"</strong></li>
+                    <li><strong>Xem tài khoản chờ duyệt:</strong>
+                        <ul>
+                            <li>Nhân viên mới sẽ có trạng thái <span class="badge badge-warning">⏳ Chờ duyệt</span></li>
+                            <li>Kiểm tra thông tin (tên, email, phòng ban)</li>
+                            <li>Nhấn <strong class="text-success">✅ Duyệt</strong> để kích hoạt tài khoản</li>
+                        </ul>
+                    </li>
+                    <li><strong>Khóa/Mở khóa tài khoản:</strong>
+                        <ul>
+                            <li>Tìm nhân viên trong danh sách</li>
+                            <li>Nhấn nút <strong class="text-danger">🔒 Khóa</strong> để vô hiệu hóa tài khoản</li>
+                            <li>Nhân viên bị khóa không thể đăng nhập hoặc đăng ký suất ăn</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <div class="highlight-box info">
+                <i class="bi bi-lightbulb me-2"></i>
+                <strong>Mẹo:</strong> Bạn có thể tìm kiếm tài khoản nhanh chóng bằng search box hoặc lọc theo phòng ban.
+            </div>
+        </div>
+
+        <!-- Quản lý suất ăn -->
+        <div class="step-card success">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Quản lý & Thống kê Suất ăn</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Theo dõi suất ăn, xem thống kê, quản lý thực đơn</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các tính năng chính:</strong>
+                <ul class="icon-list">
+                    <li><i class="bi bi-graph-up"></i> <strong>Thống kê hàng ngày:</strong> Xem tổng số suất đã đăng ký, check-in, hủy cho mỗi bữa</li>
+                    <li><i class="bi bi-calendar-event"></i> <strong>Quản lý thực đơn:</strong> Cập nhật thực đơn cho từng bữa ăn</li>
+                    <li><i class="bi bi-person-check"></i> <strong>Chi tiết nhân viên:</strong> Xem ai đã check-in, chưa check-in, hoặc hủy</li>
+                    <li><i class="bi bi-file-text"></i> <strong>Xuất báo cáo:</strong> Tải xuống dữ liệu cho báo cáo quản lý</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quản lý tài chính -->
+        <div class="step-card warning">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Quản lý Tài chính & Tính phí</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Theo dõi doanh thu, tính phí tháng, quản lý hóa đơn</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Quy trình tính phí:</strong>
+                <ol>
+                    <li><strong>Tính phí hàng tháng:</strong> Hệ thống tự động tính vào cuối tháng
+                        <ul>
+                            <li>Số suất check-in × 60,000 VND = Tổng phí</li>
+                            <li>Suất ăn bị hủy không tính phí</li>
+                            <li>Suất ăn không check-in sẽ bị tính phí (no-show)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Xem giao dịch:</strong> Danh sách tất cả giao dịch của nhân viên</li>
+                    <li><strong>Xuất hóa đơn:</strong> Tạo báo cáo tính phí cho từng nhân viên</li>
+                </ol>
+            </div>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Loại Suất</th>
+                        <th>Tính Phí</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-success">Checked-in</span></td>
+                        <td>✅ Có (60,000 VND)</td>
+                        <td>Nhân viên đã lấy suất ăn</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-warning">Hủy trước 08h</span></td>
+                        <td>❌ Không</td>
+                        <td>Hủy đăng ký đúng hạn</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-secondary">No-show</span></td>
+                        <td>✅ Có (60,000 VND)</td>
+                        <td>Đăng ký nhưng không check-in</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Thông báo -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Gửi Thông báo</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Thông báo thông tin quan trọng tới tất cả nhân viên</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Vào phần <strong>"Thông báo"</strong> (Notices)</li>
+                    <li>Nhấn nút <strong class="text-primary">➕ Thêm thông báo mới</strong></li>
+                    <li>Nhập:
+                        <ul>
+                            <li><strong>Tiêu đề:</strong> Ví dụ: "Bếp sẽ đóng cửa ngày 1/4"</li>
+                            <li><strong>Nội dung:</strong> Mô tả chi tiết</li>
+                            <li><strong>Loại:</strong> Thông báo (info), Cảnh báo (warning), Khẩn cấp (danger)</li>
+                        </ul>
+                    </li>
+                    <li>Nhấn <strong class="text-success">📤 Gửi</strong> để thông báo tới tất cả</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- FAQ Admin -->
+        <div class="faq-section">
+            <h3 class="section-title"><i class="bi bi-question-circle me-2"></i>Câu hỏi Thường gặp</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Làm sao để xóa hoặc sửa lỗi phí của nhân viên?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Admin có thể <strong>sửa/xóa giao dịch</strong> thông qua phần Tài chính. Chọn giao dịch cần sửa, nhấn "Sửa" hoặc "Xóa", sau đó xác nhận. Hệ thống sẽ tự động cập nhật phí tổng cộng.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Có cách nào để nhập hàng loạt nhân viên không?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Có. Admin có thể sử dụng tính năng <strong>Import CSV</strong> để nhập danh sách nhân viên từ file Excel. Format cần có: email, họ tên, phòng ban.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Khi nào tính phí tháng được thực hiện?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Phí tháng được tính vào <strong>ngày cuối cùng của tháng</strong> dựa trên số suất check-in và no-show. Admin có thể xem chi tiết tính phí bất cứ lúc nào trong phần Tài chính.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KITCHEN STAFF SECTION -->
+    <div id="kitchen-process" class="process-section">
+        <h2 class="section-title"><i class="bi bi-cup-hot me-2"></i>Quy trình Bếp</h2>
+
+        <!-- Check-in -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Check-in Nhân viên (Khuôn mặt)</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Xác nhận nhân viên lấy suất ăn bằng nhận dạng khuôn mặt</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Vào <strong>Kitchen Dashboard</strong> → <strong>"Check-in"</strong></li>
+                    <li>Nhấn <strong class="text-primary">📷 Khởi động Camera</strong></li>
+                    <li>Yêu cầu nhân viên nhìn vào camera (2-3 giây)</li>
+                    <li>Hệ thống sẽ:
+                        <ul>
+                            <li>Nhận diện khuôn mặt</li>
+                            <li>Tìm kiếm trong database đã đăng ký</li>
+                            <li>Hiển thị tên nhân viên + bữa ăn</li>
+                        </ul>
+                    </li>
+                    <li>Nhấn <strong class="text-success">✅ Xác nhận Check-in</strong> để ghi nhận</li>
+                </ol>
+            </div>
+            <div class="highlight-box success">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Nhà bếp tip:</strong> Nếu hệ thống gợi ý sai người hoặc không tìm thấy, nhân viên có thể nhập PIN/ID manualyy để check-in.
+            </div>
+        </div>
+
+        <!-- Thực đơn -->
+        <div class="step-card success">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Quản lý Thực đơn hàng ngày</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Cập nhật thực đơn, linh hoạt thay đổi theo điều kiện</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Các bước thực hiện:</strong>
+                <ol>
+                    <li>Vào <strong>"Thực đơn"</strong> (Menu)</li>
+                    <li>Chọn ngày muốn cập nhật</li>
+                    <li>Cập nhật từng bữa ăn:
+                        <ul>
+                            <li><strong>🌅 Sáng (06h-08h)</strong></li>
+                            <li><strong>☀️ Trưa (11h-13h)</strong></li>
+                            <li><strong>🌙 Tối (17h-19h)</strong></li>
+                        </ul>
+                    </li>
+                    <li>Mô tả món ăn: Ví dụ "Cơm tấm, thịt nướng, canh chua, rau luộc"</li>
+                    <li>Nhấn <strong class="text-success">💾 Lưu</strong></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Thống kê -->
+        <div class="step-card info">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Xem Thống kê & Tổng quan</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Theo dõi số lượng suất ăn và người dùng hàng ngày</p>
+            </div>
+            <div class="step-details">
+                <strong><i class="bi bi-check-circle me-2"></i>Thông tin có thể xem:</strong>
+                <ul class="icon-list">
+                    <li><i class="bi bi-bar-chart"></i> <strong>Tổng suất hôm nay:</strong> Bao nhiêu người đã đăng ký?</li>
+                    <li><i class="bi bi-check2-circle"></i> <strong>Check-in thực tế:</strong> Bao nhiêu người đã lấy suất?</li>
+                    <li><i class="bi bi-person"></i> <strong>Danh sách chi tiết:</strong> Tên, phòng ban, thời gian check-in</li>
+                    <li><i class="bi bi-graph-up"></i> <strong>So sánh ngày:</strong> Xu hướng lượng khách hàng</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quy trình -->
+        <div class="step-card">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Quy trình Check-in Hàng ngày</h3>
+            </div>
+            <div class="step-description">
+                <p><strong>Mục đích:</strong> Tối ưu hóa quy trình check-in trong bếp</p>
+            </div>
+            <div class="step-details">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">1</div>
+                        <strong>Chuẩn bị căn phòng check-in</strong>
+                        <p style="margin-top: 8px; color: #666;">Đảm bảo ánh sáng tốt, camera sạch, không có chướng ngại vật</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2</div>
+                        <strong>Mở ứng dụng Check-in</strong>
+                        <p style="margin-top: 8px; color: #666;">Khởi động camera và sẵn sàng nhận dạng</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">3</div>
+                        <strong>Hướng dẫn nhân viên</strong>
+                        <p style="margin-top: 8px; color: #666;">Nhân viên đứng đối mặt camera, đợi scan</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">4</div>
+                        <strong>Xác nhận & Ghi nhận</strong>
+                        <p style="margin-top: 8px; color: #666;">Nhấn Xác nhận, hệ thống ghi nhận check-in</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">5</div>
+                        <strong>Phát suất ăn</strong>
+                        <p style="margin-top: 8px; color: #666;">Nhân viên lấy suất ăn được chuẩn bị sẵn</p>
+                    </div>
+                </div>
+            </div>
+            <div class="highlight-box warning">
+                <i class="bi bi-lightbulb me-2"></i>
+                <strong>Tối ưu hóa:</strong> Có thể check-in người trước đó khi người khác đang chuẩn bị. Quá trình sẽ nhanh hơn nếu có 2 staff tại check-in.
+            </div>
+        </div>
+
+        <!-- FAQ Kitchen -->
+        <div class="faq-section">
+            <h3 class="section-title"><i class="bi bi-question-circle me-2"></i>Câu hỏi Thường gặp</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Nếu camera bị điều kiện ánh sáng tồi, làm sao?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Hãy <strong>cải thiện ánh sáng</strong> - mở đèn, sắp xếp lại vị trí camera. Nếu vẫn không được, bạn có thể chuyển sang <strong>check-in bằng PIN/ID</strong> để không ảnh hưởng hiệu suất.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Có thể sửa check-in sai không?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Nếu check-in sai người, bạn có thể <strong>hủy check-in</strong> ngay lập tức (trong vài phút) rồi check-in lại. Sau đó, admin mới có thể sửa trong hệ thống.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Nếu nhân viên chưa từng đăng ký khuôn mặt thì sao?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Hệ thống sẽ không tìm thấy khuôn mặt. Nhân viên có thể nhập PIN hoặc ID để check-in. Nên nhắc nhở nhân viên <strong>đăng ký khuôn mặt lần đầu</strong> tại trang Employee Dashboard để sử dụng tính năng này.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>❓ Thực đơn có thể cập nhật từng phần hoặc một lần?</span>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Bạn có thể cập nhật cả 3 bữa ăn (<strong>Sáng, Trưa, Tối</strong>) cùng một lúc, hoặc từng bữa riêng. Tuy nhiên, nên cập nhật sớm (trước 6h sáng) để nhân viên xem được thực đơn.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-section">
+    <p><i class="bi bi-info-circle me-2"></i>Cần thêm hỗ trợ? Liên hệ Admin hoặc gửi email hỗ trợ</p>
+    <p style="margin: 0; font-size: 0.9rem; color: #999;">© 2026 Hệ thống quản lý bếp ăn CPC1</p>
+</div>
+
+<div class="back-to-top" onclick="scrollToTop()">
+    <i class="bi bi-arrow-up"></i>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="navbar.js"></script>
+<script>
+    // Initialize navbar
+    if (typeof renderNavbar === 'function') {
+        const auth = JSON.parse(sessionStorage.getItem('auth'));
+        const role = auth ? auth.role : '';
+        renderNavbar(role, 'guide');
+    }
+
+    // Role switching
+    function switchRole(role) {
+        // Hide all sections
+        document.querySelectorAll('.process-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.role-btn').forEach(el => el.classList.remove('active'));
+
+        // Show selected
+        document.getElementById(`${role}-process`).classList.add('active');
+        event.target.closest('.role-btn').classList.add('active');
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Toggle FAQ
+    function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        answer.classList.toggle('show');
+        element.querySelector('i').style.transform = answer.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    // Back to top
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show back to top button on scroll
+    window.addEventListener('scroll', function() {
+        const btn = document.querySelector('.back-to-top');
+        if (window.pageYOffset > 300) {
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+    });
+
+    // Smooth animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.step-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+            observer.observe(card);
+        });
+    });
+</script>
+</body>
+</html>

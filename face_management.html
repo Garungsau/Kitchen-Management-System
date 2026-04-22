@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Khuôn Mặt | Hệ thống quản lý bếp ăn CPC1</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1d4ed8;
+            --primary-light: #eff4ff;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #ea580c;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .top-nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .container-xl {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0055cc 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .status-box {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-box.success {
+            background: #dcfce7;
+            border-left-color: var(--success);
+        }
+
+        .status-box.warning {
+            background: #fed7aa;
+            border-left-color: var(--warning);
+        }
+
+        .status-box.danger {
+            background: #fee2e2;
+            border-left-color: var(--danger);
+        }
+
+        .status-label {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .status-label.registered {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-label.not-registered {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-label.pending {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .face-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1550d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .timeline {
+            list-style: none;
+            padding: 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline li {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+            padding-top: 5px;
+        }
+
+        .timeline li::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border: 3px solid var(--surface);
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 3px var(--primary-light);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .timeline-time {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: var(--primary-light);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-box i {
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .info-box-content {
+            flex: 1;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-box-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list i {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0055cc 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .spinner-border {
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-warning {
+            background: #fed7aa;
+            color: #92400e;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-info {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .divider {
+            margin: 30px 0;
+            border: none;
+            border-top: 2px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .face-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top-nav">
+    <div class="container-xl">
+        <a href="employee_dashboard.html" class="back-link">
+            <i class="bi bi-arrow-left"></i> Quay lại Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="container-xl" style="padding-top: 30px; padding-bottom: 50px;">
+    <div class="page-header">
+        <h1><i class="bi bi-face-id"></i> Quản lý Khuôn Mặt</h1>
+        <p>Chọn tùy chọn để quản lý dữ liệu khuôn mặt của bạn</p>
+    </div>
+
+    <!-- Status Section -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="bi bi-info-circle"></i> Tình trạng Khuôn Mặt</h5>
+        </div>
+        <div class="card-body">
+            <div class="status-label" id="statusLabel">
+                <i class="bi bi-hourglass-split"></i> Đang kiểm tra...
+            </div>
+
+            <div id="statusContent" style="display: none;">
+                <div class="face-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="faceCount">0</div>
+                        <div class="stat-label">Ảnh đã đăng ký</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="registeredDate">-</div>
+                        <div class="stat-label">Ngày đăng ký</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="updatedDate">-</div>
+                        <div class="stat-label">Cập nhật lần cuối</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <i class="bi bi-shield-check"></i>
+                    <div class="info-box-content">
+                        <div class="info-box-title">✓ Khuôn mặt đã đăng ký</div>
+                        <div class="info-box-text">Bạn có thể sử dụng nhận diện khuôn mặt để check-in suất ăn</div>
+                    </div>
+                </div>
+
+                <ul class="feature-list">
+                    <li><i class="bi bi-check-circle-fill"></i> Nhanh: Check-in chỉ trong 2-3 giây</li>
+                    <li><i class="bi bi-check-circle-fill"></i> An toàn: Dữ liệu mã hóa trên server</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Linh hoạt: Có thể fallback sang PIN</li>
+                </ul>
+
+                <div class="action-grid">
+                    <button class="btn btn-warning" onclick="reregisterFace()">
+                        <i class="bi bi-arrow-repeat"></i> Đăng ký lại
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteFace()">
+                        <i class="bi bi-trash"></i> Xóa khuôn mặt
+                    </button>
+                    <button class="btn btn-primary" onclick="window.location.href='employee_face_register.html'">
+                        <i class="bi bi-camera"></i> Chụp lại ảnh
+                    </button>
+                </div>
+            </div>
+
+            <div id="notRegisteredContent" style="display: none;">
+                <div class="info-box" style="background: #fee2e2; border-color: var(--danger); color: var(--danger);">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <div class="info-box-content">
+                        <div class="info-box-title">⚠️ Chưa đăng ký khuôn mặt</div>
+                        <div class="info-box-text">Bạn cần đăng ký khuôn mặt để sử dụng tính năng nhận diện khi check-in</div>
+                    </div>
+                </div>
+
+                <p style="color: var(--text-muted); margin-bottom: 20px;">
+                    Nhấn nút bên dưới để bắt đầu quy trình đăng ký. Bạn sẽ cần:
+                </p>
+                <ul style="color: var(--text-muted); margin-bottom: 20px;">
+                    <li>Camera hoạt động</li>
+                    <li>Ánh sáng tốt (không chói, không tối quá)</li>
+                    <li>Khoảng 5 phút để chụp 5-6 ảnh từ các góc độ khác nhau</li>
+                </ul>
+
+                <button class="btn btn-success btn-lg" onclick="window.location.href='employee_face_register.html'" style="width: 100%; padding: 12px 20px;">
+                    <i class="bi bi-camera-fill"></i> Bắt đầu Đăng ký Khuôn Mặt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Info -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="bi bi-shield-lock"></i> Thông tin Bảo mật</h5>
+        </div>
+        <div class="card-body">
+            <div class="info-box" style="margin-bottom: 20px;">
+                <i class="bi bi-lightbulb"></i>
+                <div class="info-box-content">
+                    <div class="info-box-title">Dữ liệu của bạn được bảo vệ:</div>
+                    <div class="info-box-text">
+                        • Chỉ lưu mã hóa khuôn mặt (128 số), không lưu ảnh
+                        • Server mã hóa end-to-end
+                        • Chỉ dùng để check-in suất ăn
+                        • Bạn có quyền xóa bất cứ lúc nào
+                    </div>
+                </div>
+            </div>
+
+            <h6 style="font-weight: 600; margin-top: 20px; margin-bottom: 15px;">📋 Quyền sử dụng Khuôn mặt:</h6>
+            <ul class="feature-list">
+                <li><i class="bi bi-check-circle-fill"></i> Nhận diện khuôn mặt khi check-in suất ăn</li>
+                <li><i class="bi bi-check-circle-fill"></i> Tối ưu hóa độ chính xác của hệ thống</li>
+                <li><i class="bi bi-x-circle-fill" style="color: var(--danger);"></i> KHÔNG chia sẻ với bên thứ 3</li>
+                <li><i class="bi bi-x-circle-fill" style="color: var(--danger);"></i> KHÔNG dùng cho các mục đích khác</li>
+            </ul>
+
+            <hr class="divider">
+
+            <h6 style="font-weight: 600; margin-bottom: 15px;">🔐 Cách bảo vệ dữ liệu của bạn:</h6>
+            <ol style="color: var(--text-muted); line-height: 1.8;">
+                <li><strong>Không lưu ảnh:</strong> Chỉ extract patterns từ khuôn mặt (128 số)</li>
+                <li><strong>Database mã hóa:</strong> Các patterns được mã hóa trước khi lưu</li>
+                <li><strong>Access control:</strong> Chỉ có phần mềm được phép đọc dữ liệu</li>
+                <li><strong>Audit log:</strong> Mỗi lần check-in đều được ghi nhận</li>
+                <li><strong>Data retention:</strong> Dữ liệu bị xóa nếu bạn xóa tài khoản</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="bi bi-book"></i> Hướng dẫn sử dụng</h5>
+        </div>
+        <div class="card-body">
+            <h6 style="font-weight: 600; margin-bottom: 15px;">📷 Các bước đăng ký:</h6>
+            <ul class="timeline">
+                <li>
+                    <div class="timeline-title">1. Chọn Camera</div>
+                    <div class="timeline-time">Đảm bảo camera hoạt động bình thường</div>
+                </li>
+                <li>
+                    <div class="timeline-title">2. Chụp 5 Ảnh</div>
+                    <div class="timeline-time">Từ các góc độ khác nhau (trước, trái, phải, trên, dưới)</div>
+                </li>
+                <li>
+                    <div class="timeline-title">3. Xác nhận</div>
+                    <div class="timeline-time">Nhấn "Đăng ký Khuôn Mặt" khi có đủ ảnh</div>
+                </li>
+                <li>
+                    <div class="timeline-title">4. Hoàn thành</div>
+                    <div class="timeline-time">Có thể sử dụng ngay để check-in</div>
+                </li>
+            </ul>
+
+            <hr class="divider">
+
+            <h6 style="font-weight: 600; margin-bottom: 15px;">✅ Mẹo để đạt hiệu suất tốt:</h6>
+            <ul style="color: var(--text-muted);">
+                <li>✓ Ánh sáng tốt (không bóng, không chói)</li>
+                <li>✓ Khuôn mặt rõ - không đeo mặt nạ, kính đen</li>
+                <li>✓ Chụp từ khoảng 30cm-50cm từ camera</li>
+                <li>✓ Phong đoàn tự nhiên - cười hoặc biểu cảm bình thường</li>
+                <li>✓ Tóc không che mặt</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Xác nhận Xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 25px;">
+                <p style="margin-bottom: 15px;">Bạn có chắc chắn muốn <strong>xóa dữ liệu khuôn mặt</strong>?</p>
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <strong>Lưu ý:</strong> Sau khi xóa, bạn sẽ không thể sử dụng nhận diện khuôn mặt cho đến khi đăng ký lại.
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 15px 25px;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="bi bi-trash"></i> Xóa Khuôn Mặt
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    let deleteModal = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+        deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        await checkFaceStatus();
+    });
+
+    // Check face registration status
+    async function checkFaceStatus() {
+        try {
+            const response = await fetch('api/manage_face.php?action=check', {
+                method: 'GET'
+            });
+
+            const result = await response.json();
+
+            document.getElementById('statusLabel').innerHTML = '';
+
+            if (result.status === 'registered') {
+                document.getElementById('statusContent').style.display = 'block';
+                document.getElementById('notRegisteredContent').style.display = 'none';
+
+                // Format dates
+                const regDate = new Date(result.registered_date);
+                const updDate = new Date(result.updated_date);
+
+                document.getElementById('faceCount').textContent = result.face_count || 0;
+                document.getElementById('registeredDate').textContent = regDate.toLocaleDateString('vi-VN');
+                document.getElementById('updatedDate').textContent = updDate.toLocaleDateString('vi-VN');
+            } else {
+                document.getElementById('statusContent').style.display = 'none';
+                document.getElementById('notRegisteredContent').style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Lỗi kiểm tra trạng thái: ' + error.message);
+        }
+    }
+
+    // Delete face
+    function deleteFace() {
+        deleteModal.show();
+    }
+
+    async function confirmDelete() {
+        deleteModal.hide();
+
+        try {
+            const response = await fetch('api/manage_face.php?action=delete', {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert('✓ Đã xóa khuôn mặt thành công');
+                await checkFaceStatus();
+            } else {
+                alert('❌ Lỗi: ' + result.message);
+            }
+        } catch (error) {
+            alert('Lỗi xóa: ' + error.message);
+        }
+    }
+
+    // Reregister face
+    function reregisterFace() {
+        if (confirm('Bạn sẽ bắt đầu quá trình đăng ký lại khuôn mặt. Tiếp tục?')) {
+            window.location.href = 'employee_face_register.html';
+        }
+    }
+</script>
+</body>
+</html>

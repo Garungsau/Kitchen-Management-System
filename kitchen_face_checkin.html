@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhân Diện Khuôn Mặt Check-in | Hệ thống quản lý bếp ăn CPC1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --blue: #1d4ed8;
+            --blue-lt: #eff4ff;
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --text: #111827;
+            --text2: #4b5a72;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        
+        .container-xl {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            background: var(--blue-lt);
+            border: none;
+            border-radius: 12px 12px 0 0;
+            padding: 20px;
+            border-bottom: 2px solid var(--blue);
+        }
+        
+        .card-header h4 {
+            color: var(--blue);
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid var(--blue);
+        }
+        
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        canvas {
+            display: none;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .user-card {
+            background: var(--surface);
+            border: 2px solid var(--blue);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            object-fit: cover;
+            border: 3px solid var(--blue);
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+        
+        .user-email {
+            font-size: 14px;
+            color: var(--text2);
+            margin-bottom: 15px;
+        }
+        
+        .confidence-score {
+            background: var(--blue-lt);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .confidence-label {
+            font-size: 12px;
+            color: var(--text2);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .confidence-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--blue);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-info {
+            background: var(--blue-lt);
+            color: var(--blue);
+        }
+        
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .btn-primary {
+            background: var(--blue);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+        
+        .btn-group-custom {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-group-custom button {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .spinner-border {
+            color: var(--blue);
+        }
+        
+        .shift-pills {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .shift-pill {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #e5e7eb;
+            background: var(--surface);
+            color: var(--text2);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .shift-pill.active {
+            border-color: var(--blue);
+            background: var(--blue-lt);
+            color: var(--blue);
+        }
+        
+        .detection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid #00ff00;
+            border-radius: 12px;
+            display: none;
+            pointer-events: none;
+        }
+        
+        .detection-overlay.detected {
+            display: block;
+            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group-custom button {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-xl">
+        <div style="margin-bottom: 30px;">
+            <a href="kitchen_staff_dashboard.html" class="text-decoration-none">
+                <i class="bi bi-arrow-left"></i> Quay lại Dashboard
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-camera-fill"></i> Nhân Diện Khuôn Mặt Check-in</h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="grid-2">
+                    <!-- Camera Section -->
+                    <div>
+                        <h6 class="mb-3 fw-bold">Camera Nhân Diện</h6>
+                        <div class="video-container">
+                            <video id="video" autoplay playsinline muted></video>
+                            <div class="detection-overlay" id="detectionOverlay"></div>
+                            <canvas id="canvas"></canvas>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <span id="detectionStatus" class="status-badge status-info">
+                                <i class="bi bi-hourglass-split"></i> Chờ khuôn mặt...
+                            </span>
+                        </div>
+
+                        <div class="btn-group-custom">
+                            <button id="btnStartDetection" class="btn btn-primary">
+                                <i class="bi bi-play-fill"></i> Bắt Đầu
+                            </button>
+                            <button id="btnStopDetection" class="btn btn-secondary" disabled>
+                                <i class="bi bi-stop-fill"></i> Dừng
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Result Section -->
+                    <div>
+                        <h6 class="mb-3 fw-bold">Kết Quả Nhân Diện</h6>
+                        
+                        <div id="resultBox" class="text-center">
+                            <p class="text-muted">
+                                <i class="bi bi-info-circle"></i><br>
+                                Hệ thống sẽ hiển thị kết quả nhân diện khuôn mặt tại đây
+                            </p>
+                        </div>
+
+                        <!-- Shift Selection -->
+                        <div id="shiftSection" style="display: none;">
+                            <h6 class="mt-4 mb-3 fw-bold">Chọn Ca Ăn</h6>
+                            <div class="shift-pills">
+                                <button class="shift-pill" data-shift="lunch">
+                                    <i class="bi bi-sun"></i> Trưa
+                                </button>
+                                <button class="shift-pill" data-shift="dinner">
+                                    <i class="bi bi-moon-stars"></i> Tối
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading -->
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Đang xử lý...</span>
+                            </div>
+                            <p class="text-muted mt-2">Đang nhân diện...</p>
+                        </div>
+
+                        <!-- Messages -->
+                        <div id="messageBox" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-graph-up"></i> Thống Kê Check-in</h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="grid-2" id="statsBox">
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; font-weight: 700; color: var(--blue);">-</div>
+                        <p class="text-muted">Tổng Check-in Hôm Nay</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; font-weight: 700; color: var(--blue);">-</div>
+                        <p class="text-muted">Check-in Bằng Khuôn Mặt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- face-api.js Library -->
+    <script async src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    
+    <script>
+        let video, canvas, ctx;
+        let isDetecting = false;
+        let selectedShift = 'lunch';
+        let recognizedUser = null;
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', async () => {
+            video = document.getElementById('video');
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+
+            // Load face-api models
+            const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/';
+            try {
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+                ]);
+                console.log('✓ Models loaded');
+            } catch (err) {
+                showMessage('Lỗi tải model: ' + err.message, 'error');
+            }
+
+            // Setup video
+            setupVideo();
+
+            // Event listeners
+            document.getElementById('btnStartDetection').addEventListener('click', startDetecting);
+            document.getElementById('btnStopDetection').addEventListener('click', stopDetecting);
+
+            // Shift selection
+            document.querySelectorAll('.shift-pill').forEach(pill => {
+                pill.addEventListener('click', function() {
+                    document.querySelectorAll('.shift-pill').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedShift = this.dataset.shift;
+                });
+            });
+
+            // Set default shift
+            document.querySelector('[data-shift="lunch"]').classList.add('active');
+        });
+
+        // Setup video
+        async function setupVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user' }
+                });
+                
+                video.srcObject = stream;
+                
+                video.addEventListener('loadedmetadata', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                });
+            } catch (err) {
+                showMessage('Lỗi truy cập camera: ' + err.message, 'error');
+            }
+        }
+
+        // Start detection
+        async function startDetecting() {
+            isDetecting = true;
+            document.getElementById('btnStartDetection').disabled = true;
+            document.getElementById('btnStopDetection').disabled = false;
+            recognizedUser = null;
+            document.getElementById('shiftSection').style.display = 'block';
+            
+            const detect = async () => {
+                const detections = await faceapi.detectAllFaces(
+                    video,
+                    new faceapi.TinyFaceDetectorOptions()
+                ).withFaceLandmarks().withFaceDescriptors();
+
+                updateDetectionStatus(detections.length > 0);
+                
+                if (detections.length === 1 && isDetecting) {
+                    // Recognize using server-side embedding from captured frame
+                    await recognizeFace();
+                }
+
+                if (isDetecting) {
+                    requestAnimationFrame(detect);
+                }
+            };
+
+            detect();
+        }
+
+        // Stop detection
+        function stopDetecting() {
+            isDetecting = false;
+            document.getElementById('btnStartDetection').disabled = false;
+            document.getElementById('btnStopDetection').disabled = true;
+            document.getElementById('detectionStatus').innerHTML = '<span class="status-badge status-info"><i class="bi bi-stop-circle"></i> Đã dừng</span>';
+            document.getElementById('detectionOverlay').classList.remove('detected');
+        }
+
+        // Update detection status
+        function updateDetectionStatus(detected) {
+            const overlay = document.getElementById('detectionOverlay');
+            const status = document.getElementById('detectionStatus');
+            
+            if (detected) {
+                status.innerHTML = '<span class="status-badge status-success"><i class="bi bi-check-circle"></i> Đã phát hiện khuôn mặt</span>';
+                overlay.classList.add('detected');
+            } else {
+                status.innerHTML = '<span class="status-badge status-info"><i class="bi bi-hourglass-split"></i> Chờ khuôn mặt...</span>';
+                overlay.classList.remove('detected');
+            }
+        }
+
+        // Recognize face
+        async function recognizeFace() {
+            // Throttle recognition (not every frame)
+            if (recognizedUser) return;
+
+            if (!video || !canvas || !ctx) return;
+
+            // Capture raw frame and send to server for trusted embedding extraction
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const snapshot = canvas.toDataURL('image/jpeg', 0.85);
+
+            try {
+                const response = await fetch('api/recognize_face.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image_data_url: snapshot })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    recognizedUser = result.matched_user;
+                    displayUserResult(recognizedUser);
+                    stopDetecting();
+                    await confirmCheckin(recognizedUser.user_id, recognizedUser.name, true);
+                }
+            } catch (err) {
+                console.error('Recognition error:', err);
+            }
+        }
+
+        // Display user result
+        function displayUserResult(user) {
+            const resultBox = document.getElementById('resultBox');
+            const shiftNames = { lunch: 'Ca Trưa', dinner: 'Ca Tối' };
+            
+            resultBox.innerHTML = `
+                <div class="user-card">
+                    <img src="assets/${user.avatar || 'default-avatar.png'}" class="user-avatar" onerror="this.src='https://via.placeholder.com/100'">
+                    <div class="user-name">${user.name}</div>
+                    <div class="user-email">${user.email}</div>
+                    <div class="confidence-score">
+                        <div class="confidence-label">Độ Chính Xác</div>
+                        <div class="confidence-value">${user.confidence}%</div>
+                    </div>
+                    <button class="btn btn-success w-100 mt-3" onclick="confirmCheckin('${user.user_id}', '${user.name}', false)">
+                        <i class="bi bi-check-circle"></i> Xác Nhận Thủ Công
+                    </button>
+                    <button class="btn btn-secondary w-100 mt-2" onclick="resetDetection()">
+                        <i class="bi bi-arrow-clockwise"></i> Quét Lại
+                    </button>
+                </div>
+            `;
+        }
+
+        // Confirm check-in
+        async function confirmCheckin(userId, userName, skipPrompt = false) {
+            if (!skipPrompt && !confirm(`Xác nhận check-in cho ${userName} vào ca ${selectedShift}?`)) {
+                return;
+            }
+
+            document.getElementById('loadingSpinner').style.display = 'block';
+
+            try {
+                const response = await fetch('api/checkin.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        meal_date: new Date().toISOString().split('T')[0],
+                        meal_type: selectedShift,
+                        check_in_type: 'face_recognition'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showMessage(`✓ ${userName} check-in thành công vào ca ${selectedShift}!`, 'success');
+                    setTimeout(() => resetDetection(), 1500);
+                } else {
+                    showMessage('Lỗi: ' + result.message, 'error');
+                }
+            } catch (err) {
+                showMessage('Lỗi gửi dữ liệu: ' + err.message, 'error');
+            } finally {
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        }
+
+        // Reset detection
+        function resetDetection() {
+            recognizedUser = null;
+            document.getElementById('resultBox').innerHTML = `
+                <p class="text-muted">
+                    <i class="bi bi-info-circle"></i><br>
+                    Hệ thống sẽ hiển thị kết quả nhân diện khuôn mặt tại đây
+                </p>
+            `;
+            document.getElementById('shiftSection').style.display = 'block';
+            document.getElementById('messageBox').innerHTML = '';
+            document.getElementById('btnStartDetection').disabled = false;
+        }
+
+        // Show message
+        function showMessage(text, type = 'info') {
+            const box = document.getElementById('messageBox');
+            const className = {
+                'success': 'alert-success',
+                'error': 'alert-danger',
+                'info': 'alert-info'
+            }[type] || 'alert-info';
+
+            box.innerHTML = `<div class="alert ${className} alert-dismissible fade show" role="alert">
+                ${text}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>`;
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

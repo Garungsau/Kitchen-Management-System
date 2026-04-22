@@ -1,0 +1,3233 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bảng Điều Khiển Nhân Viên | Hệ thống quản lý bếp ăn CPC1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/pharma-theme.css">
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --border: #e2e8f4;
+            --border2: #c8d6ef;
+            --text: #111827;
+            --text2: #4b5a72;
+            --text3: #8a97ac;
+            --blue: #1d4ed8;
+            --blue-lt: #eff4ff;
+            --blue-mid: #93aef5;
+            --green: #15803d;
+            --green-lt: #f0fdf4;
+            --green-bd: #86efac;
+            --red: #b91c1c;
+            --red-lt: #fef2f2;
+            --red-bd: #fca5a5;
+            --amber: #92400e;
+            --amber-lt: #fffbeb;
+            --amber-bd: #fcd34d;
+            --gray-lt: #f8fafc;
+        }
+        html, body { 
+            height: 100%; 
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+        body { 
+            display: flex; 
+            flex-direction: column; 
+            font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        #navbar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1050;
+            height: 60px;
+            background: var(--surface);
+            margin: 0;
+            padding: 0;
+        }
+
+        #navbar-container .navbar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            z-index: 1050 !important;
+            background: var(--surface) !important;
+            border-bottom: 1.5px solid var(--border) !important;
+            border-radius: 0 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+            margin: 0 !important;
+            padding: 12px 0 !important;
+            height: 60px !important;
+        }
+
+        #navbar-container .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            margin-top: 72px;
+            width: 100%;
+            gap: 0;
+        }
+
+        .user-info-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .user-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: var(--blue-lt);
+            color: var(--text);
+            border: 1px solid var(--border2);
+        }
+
+        .user-pill i { color: var(--blue); }
+
+        .user-meta { color: var(--text3); font-size: 0.85rem; }
+        
+        .profile-img { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .status-calendar-panel {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            color: var(--text2);
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+        .status-calendar-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .status-calendar-nav { display: flex; gap: 8px; }
+        .status-calendar-nav .btn {
+            border-radius: 12px;
+            border: 1.5px solid var(--border2);
+            color: var(--text2);
+            background: #fff;
+            min-width: 40px;
+        }
+        .status-calendar-nav .btn:hover { border-color: var(--blue-mid); color: var(--blue); background: var(--blue-lt); }
+        .status-calendar-note { color: var(--text3); font-size: 0.82rem; }
+        .calendar-today-label {
+            color: var(--text3);
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .status-calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .status-calendar-weekdays span {
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text3);
+        }
+        #calendarGrid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+        }
+        .calendar-day {
+            border: 1.5px solid var(--border2);
+            height: 74px;
+            position: relative;
+            cursor: pointer;
+            background: #ffffff;
+            border-radius: 12px;
+            transition: transform 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+        }
+        .calendar-day:hover { transform: translateY(-1px); border-color: var(--blue-mid); background: var(--blue-lt); }
+        .calendar-day.blank-day {
+            border-style: dashed;
+            opacity: .35;
+            cursor: default;
+            background: transparent;
+        }
+        .active-meal { background-color: rgba(52, 168, 83, 0.16); border-color: rgba(52, 168, 83, 0.45); }
+        .inactive-meal { background-color: rgba(234, 67, 53, 0.12); border-color: rgba(234, 67, 53, 0.4); }
+        .no-show-meal { background-color: rgba(120, 120, 120, 0.12); border-color: rgba(150, 150, 150, 0.35); }
+        .today-day {
+            background-color: rgba(66, 133, 244, 0.14);
+            border-color: rgba(66, 133, 244, 0.5);
+            box-shadow: inset 0 0 0 2px rgba(29, 78, 216, 0.2);
+        }
+        .today-day .date-num { color: var(--blue); font-weight: 800; }
+        .today-flag {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--blue);
+            background: var(--blue-lt);
+            border: 1px solid var(--blue-mid);
+        }
+        .disabled-day { opacity: 0.52; cursor: not-allowed; }
+        .date-num {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text2);
+        }
+        .meal-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+        .calendar-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            color: var(--text2);
+            font-weight: 600;
+        }
+        .calendar-legend .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .calendar-legend .dot.reg { background: var(--green); }
+        .calendar-legend .dot.cancel { background: var(--red); }
+        .calendar-legend .dot.noshow { background: #b8b8b8; }
+        .calendar-legend .dot.today { background: #76adf2; }
+        .complaint-preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .complaint-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border2);
+            object-fit: cover;
+            cursor: pointer;
+            background: #fff;
+        }
+        .complaint-thumb:hover {
+            border-color: var(--blue-mid);
+            transform: translateY(-1px);
+        }
+        .complaint-preview-note {
+            font-size: 0.78rem;
+            color: var(--text3);
+            margin-top: 4px;
+        }
+        .employee-side-menu .nav-link {
+            text-align: left;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1.5px solid var(--border2);
+            color: var(--text2);
+            font-weight: 600;
+            background: var(--surface);
+        }
+        .employee-side-menu .nav-link.active {
+            background: var(--blue);
+            color: #fff;
+            border-color: var(--blue);
+        }
+        .action-panel {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .reg-step-pill {
+            display: inline-block;
+            border-radius: 999px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+        .reg-status-box {
+            background: var(--gray-lt);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        .reg-main-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .reg-main-actions .btn {
+            min-height: 48px;
+            font-size: 1.05rem;
+        }
+        @media (max-width: 575.98px) {
+            .reg-main-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stat-card { border: 1.5px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+        .shift-chip { border: 1.5px solid var(--border2); background: var(--surface); color: var(--text2); border-radius: 999px; padding: 6px 12px; font-weight: 600; }
+        .shift-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+        .quick-action-btn {
+            border: 1.5px solid var(--border2);
+            background: var(--surface);
+            color: var(--text2);
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 8px 10px;
+        }
+        .quick-action-btn:hover { background: var(--blue-lt); color: var(--blue); border-color: var(--blue-mid); }
+        .advanced-reg-box {
+            border: 1.5px dashed var(--border2);
+            border-radius: 10px;
+            background: var(--gray-lt);
+            padding: 10px;
+        }
+        .plan-calendar-wrap { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px; background: var(--surface); }
+        .plan-calendar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .plan-calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .plan-cal-dow { text-align: center; font-size: 0.72rem; color: var(--text3); font-weight: 700; }
+        .plan-cal-day {
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            min-height: 32px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #fff;
+            color: var(--text2);
+        }
+        .plan-cal-day:hover { background: var(--blue-lt); color: var(--blue); }
+        .plan-cal-day.is-selected { background: var(--blue); color: #fff; border-color: var(--blue); }
+        .plan-cal-day.is-today { border-color: var(--blue-mid); }
+        .plan-cal-day.is-disabled { opacity: 0.45; cursor: not-allowed; }
+        .plan-cal-empty { min-height: 32px; }
+
+        .payment-method-card {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            text-align: center;
+        }
+        .payment-method-card:hover { border-color: var(--blue); background-color: var(--blue-lt); }
+        .payment-method-card.selected { border-color: var(--blue); background-color: var(--blue-lt); }
+        .payment-logo { height: 50px; width: auto; object-fit: contain; }
+        .profile-field-bg { background-color: #e9ecef; }
+        .profile-field-bg:focus { background-color: #e9ecef !important; }
+
+        .menu-preview {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            padding: 16px 18px;
+            margin-bottom: 14px;
+        }
+        .menu-preview-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: var(--text2);
+            margin-bottom: 8px;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 8px;
+        }
+        .menu-cell {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            background: var(--gray-lt);
+            text-align: center;
+            cursor: pointer;
+            transition: all .13s;
+        }
+        .menu-cell.active-shift {
+            border-color: var(--blue);
+            background: var(--blue-lt);
+        }
+        .menu-cell-icon { display: none; }
+        .menu-cell-shift {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text3);
+            letter-spacing: .02em;
+        }
+        .menu-cell.active-shift .menu-cell-shift { color: var(--blue); }
+        .menu-cell-dish {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 3px;
+            line-height: 1.3;
+            min-height: 20px;
+        }
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .left-panel, .right-panel {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            padding: 18px;
+        }
+        .hero-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 4px;
+        }
+        .hero-date {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.15;
+        }
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all .18s;
+            border: 1.5px solid var(--border);
+            background: var(--gray-lt);
+            color: var(--text2);
+        }
+        .status-chip.registered {
+            background: var(--green-lt);
+            color: var(--green);
+            border-color: var(--green-bd);
+        }
+        .status-chip.not-registered {
+            background: var(--red-lt);
+            color: var(--red);
+            border-color: var(--red-bd);
+        }
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: currentColor;
+        }
+        .shift-row {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .shift-card {
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 8px;
+            background: var(--surface);
+            text-align: center;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .shift-card:hover { border-color: var(--blue-mid); }
+        .shift-card.active {
+            border-color: var(--blue);
+            background: var(--blue-lt);
+        }
+        .shift-icon { display: none; }
+        .shift-name { font-size: 12px; font-weight: 700; color: var(--text2); }
+        .shift-card.active .shift-name { color: var(--blue); }
+        .action-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .quick-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin: 16px 0 8px;
+        }
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 7px;
+            margin-bottom: 4px;
+        }
+        .quick-btn {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 8px;
+            background: var(--surface);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text2);
+            transition: all .13s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .quick-btn:hover { border-color: var(--blue-mid); background: var(--blue-lt); color: var(--blue); }
+        .quick-btn.cancel-btn:hover { border-color: var(--red-bd); background: var(--red-lt); color: var(--red); }
+        .quick-btn .qi { font-size: 16px; }
+        .adv-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 9px;
+            border: 1.5px dashed var(--border2);
+            border-radius: 12px;
+            background: var(--gray-lt);
+            color: var(--text3);
+            font-size: 12px;
+            font-weight: 600;
+            transition: all .15s;
+            margin-top: 6px;
+        }
+        .adv-toggle:hover { border-color: var(--blue-mid); color: var(--blue); background: var(--blue-lt); }
+
+        @media (max-width: 991.98px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 575.98px) {
+            .quick-grid { grid-template-columns: repeat(2,1fr); }
+            .action-pair { grid-template-columns: 1fr; }
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            border-color: var(--blue);
+        }
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background: #1e40af;
+            border-color: #1e40af;
+        }
+        .btn-success {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        .btn-success:hover,
+        .btn-success:focus {
+            background: #166534;
+            border-color: #166534;
+        }
+        .btn-outline-primary {
+            color: var(--blue);
+            border-color: var(--blue-mid);
+            background: var(--blue-lt);
+        }
+        .btn-outline-primary:hover,
+        .btn-outline-primary:focus {
+            color: #fff;
+            background: var(--blue);
+            border-color: var(--blue);
+        }
+        .btn-outline-danger {
+            color: var(--red);
+            border-color: var(--red-bd);
+            background: var(--red-lt);
+        }
+        .btn-outline-danger:hover,
+        .btn-outline-danger:focus {
+            color: #fff;
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        .skeleton-shimmer {
+            position: relative;
+            overflow: hidden;
+            background: #e9f0fb;
+            color: transparent !important;
+            border-radius: 8px;
+        }
+        .skeleton-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.72) 50%, transparent 100%);
+            animation: skeletonMove 1.25s infinite;
+        }
+        @keyframes skeletonMove {
+            from { left: -150%; }
+            to { left: 100%; }
+        }
+        body.dashboard-loading .stat-value {
+            display: inline-block;
+            min-width: 52px;
+            min-height: 30px;
+        }
+        body.dashboard-loading .stat-value,
+        body.dashboard-loading #dateTomorrow,
+        body.dashboard-loading #statusTextTomorrow {
+            color: transparent !important;
+        }
+        body.dashboard-loading .stat-value,
+        body.dashboard-loading #dateTomorrow,
+        body.dashboard-loading #statusTextTomorrow,
+        body.dashboard-loading #calendarGrid .calendar-day {
+            position: relative;
+            overflow: hidden;
+            background: #e9f0fb !important;
+            border-color: #d6e3f8 !important;
+        }
+        body.dashboard-loading .stat-value::after,
+        body.dashboard-loading #dateTomorrow::after,
+        body.dashboard-loading #statusTextTomorrow::after,
+        body.dashboard-loading #calendarGrid .calendar-day::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.72) 50%, transparent 100%);
+            animation: skeletonMove 1.25s infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="navbar-container"></div>
+    <main>
+    <div class="container pb-3 flex-grow-1">
+        <div class="alert alert-warning border-warning shadow-sm mb-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Hạn chót:</strong> <span id="cutoffTimeLabel">08:00</span> sáng ngày mai cho suất ăn ngày mai.</div>
+            <div class="fw-bold text-danger">Còn lại: <span id="cutoffCountdown">--:--:--</span></div>
+        </div>
+
+        <div id="realtimeAlertHost" class="mb-3"></div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card p-3 text-center">
+                    <div class="small text-muted fw-bold">Đã đăng ký</div>
+                    <div class="fs-4 fw-bold text-success stat-value" id="statRegistered">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card p-3 text-center">
+                    <div class="small text-muted fw-bold">Đã check-in</div>
+                    <div class="fs-4 fw-bold text-primary stat-value" id="statCheckedIn">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card p-3 text-center">
+                    <div class="small text-muted fw-bold">Vắng không báo</div>
+                    <div class="fs-4 fw-bold text-secondary stat-value" id="statNoShow">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card p-3 text-center">
+                    <div class="small text-muted fw-bold">Đã hủy</div>
+                    <div class="fs-4 fw-bold text-danger stat-value" id="statCancelled">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header fw-bold py-3">Menu chức năng</div>
+                    <div class="card-body">
+                        <div class="employee-side-menu nav flex-column" id="employeeSidebarMenu" role="tablist">
+                            <button class="nav-link active" id="btn-tab-register" data-bs-toggle="tab" data-bs-target="#tab-register" type="button">Đăng ký suất ăn</button>
+                            <button class="nav-link" id="btn-tab-history" data-bs-toggle="tab" data-bs-target="#tab-history" type="button">Lịch sử đăng ký</button>
+                            <button class="nav-link" id="btn-tab-complaint" data-bs-toggle="tab" data-bs-target="#tab-complaint" type="button">Khiếu nại suất ăn</button>
+                            <a class="nav-link text-decoration-none" href="employee_face_register.html" target="_blank" rel="noopener">Đăng ký khuôn mặt</a>
+                            <a class="nav-link text-decoration-none" href="process_guide.html" target="_blank" rel="noopener">Hướng dẫn quy trình</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="menu-preview">
+                    <div class="menu-preview-title">Thực đơn ngày mai (2 ca)</div>
+                    <div id="menuSourceStatus" class="small text-muted mb-2">Nguồn dữ liệu: đang tải...</div>
+                    <div class="menu-grid">
+                        <div class="menu-cell" id="menuCellLunch" onclick="selectShiftFromMenu('lunch')">
+                            <span class="menu-cell-icon">☀️</span>
+                            <div class="menu-cell-shift">Ca trưa</div>
+                            <div class="menu-cell-dish" id="viewLunch">-</div>
+                        </div>
+                        <div class="menu-cell" id="menuCellDinner" onclick="selectShiftFromMenu('dinner')">
+                            <span class="menu-cell-icon">🌙</span>
+                            <div class="menu-cell-shift">Ca tối</div>
+                            <div class="menu-cell-dish" id="viewDinner">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4" id="menu-dang-ky">
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab-register">
+                                <div class="two-col">
+                                    <div class="left-panel">
+                                        <div class="action-panel">
+                                            <div class="d-flex align-items-start justify-content-between mb-3 gap-2 flex-wrap">
+                                                <div>
+                                                    <div class="hero-label">Ngày mai</div>
+                                                    <div class="hero-date" id="dateTomorrow">...</div>
+                                                </div>
+                                                <div id="heroStatusChip" class="status-chip not-registered">
+                                                    <span class="status-dot"></span>
+                                                    <span id="statusTextTomorrow">Đang tải...</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="small text-muted mb-2">Chọn ca bên dưới rồi bấm Đăng ký hoặc Hủy suất.</div>
+
+                                            <div class="alert alert-info py-2 px-3 mb-2 small" role="alert">
+                                                <strong>Ca hiện tại:</strong> <span id="currentShiftDisplay">Ca Trưa (☀️)</span>
+                                            </div>
+
+                                            <div class="shift-row" id="shiftSelectorTomorrow">
+                                                <button type="button" class="shift-chip shift-card active" data-shift="lunch"><span class="shift-icon">☀️</span><span class="shift-name">Trưa</span></button>
+                                                <button type="button" class="shift-chip shift-card" data-shift="dinner"><span class="shift-icon">🌙</span><span class="shift-name">Tối</span></button>
+                                                <button type="button" class="shift-chip shift-card" data-shift="both"><span class="shift-icon">🌅</span><span class="shift-name">Cả ngày</span></button>
+                                            </div>
+
+                                            <div class="action-pair">
+                                                <button class="btn btn-success fw-bold" type="button" id="btnTomorrowRegister" onclick="registerTomorrowMeal()">Đăng ký</button>
+                                                <button class="btn btn-outline-danger fw-bold" type="button" id="btnTomorrowCancel" onclick="cancelTomorrowMeal()">Hủy suất</button>
+                                            </div>
+                                            <div id="tomorrowActionMsg" class="small fw-bold mt-2"></div>
+                                        </div>
+
+                                        <div class="action-panel mt-3">
+                                            <div class="quick-label">Đăng ký nhanh</div>
+                                            <div class="quick-grid mb-2">
+                                                <button class="quick-btn" type="button" id="btnQuickReg3Days">
+                                                    <span class="qi"><i class="bi bi-lightning-charge-fill"></i></span>3 ngày tới
+                                                </button>
+                                                <button class="quick-btn" type="button" id="btnQuickRegWorkdays">
+                                                    <span class="qi"><i class="bi bi-calendar-week"></i></span>Tuần này
+                                                </button>
+                                                <button class="quick-btn cancel-btn" type="button" id="btnQuickCancel3Days">
+                                                    <span class="qi"><i class="bi bi-x-circle"></i></span>Hủy 3 ngày
+                                                </button>
+                                            </div>
+
+                                            <div class="advanced-reg-box mt-2">
+                                                <button class="adv-toggle mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#advancedRegPanel" aria-expanded="false" aria-controls="advancedRegPanel">
+                                                    Tùy chọn nâng cao (theo ngày/tuần)
+                                                </button>
+
+                                                <div class="collapse" id="advancedRegPanel">
+                                                    <div class="mb-2">
+                                                        <label class="small fw-bold">Hình thức</label>
+                                                        <select id="regMode" class="form-select form-select-sm">
+                                                            <option value="shift">Theo ca</option>
+                                                            <option value="day" selected>Theo ngày</option>
+                                                            <option value="week">Theo tuần</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label class="small fw-bold">Ca ăn</label>
+                                                        <select id="regShift" class="form-select form-select-sm">
+                                                            <option value="lunch" selected>Ca trưa</option>
+                                                            <option value="dinner">Ca tối</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label class="small fw-bold">Ngày bắt đầu</label>
+                                                        <input type="date" id="regDate" class="form-control form-control-sm">
+                                                    </div>
+                                                    <div class="mb-2 plan-calendar-wrap">
+                                                        <div class="plan-calendar-head">
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="planPrevMonth"><i class="bi bi-chevron-left"></i></button>
+                                                            <div class="small fw-bold" id="planCalMonthLabel">Tháng</div>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="planNextMonth"><i class="bi bi-chevron-right"></i></button>
+                                                        </div>
+                                                        <div class="plan-calendar-days mb-1">
+                                                            <div class="plan-cal-dow">T2</div>
+                                                            <div class="plan-cal-dow">T3</div>
+                                                            <div class="plan-cal-dow">T4</div>
+                                                            <div class="plan-cal-dow">T5</div>
+                                                            <div class="plan-cal-dow">T6</div>
+                                                            <div class="plan-cal-dow">T7</div>
+                                                            <div class="plan-cal-dow">CN</div>
+                                                        </div>
+                                                        <div class="plan-calendar-days" id="planCalendarGrid"></div>
+                                                    </div>
+                                                    <div class="mb-3" id="weekPatternWrap" style="display:none;">
+                                                        <label class="small fw-bold">Mẫu tuần</label>
+                                                        <select id="regWeekPattern" class="form-select form-select-sm">
+                                                            <option value="workdays" selected>Thứ 2 đến Thứ 6</option>
+                                                            <option value="fullweek">Cả 7 ngày</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="d-grid gap-2">
+                                                        <button class="btn btn-primary btn-sm fw-bold" type="button" id="btnRegisterPlan">Đăng ký theo lựa chọn</button>
+                                                        <button class="btn btn-outline-danger btn-sm fw-bold" type="button" id="btnCancelPlan">Hủy theo lựa chọn</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="regActionMsg" class="small fw-bold mt-2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="action-panel mb-3">
+                                            <span class="reg-step-pill">XEM THỰC ĐƠN</span>
+                                            <div class="row g-2 align-items-end">
+                                                <div class="col-md-5">
+                                                    <label class="small fw-bold">Xem thực đơn ngày</label>
+                                                    <input type="date" id="menuViewDate" class="form-control form-control-sm">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="small fw-bold">Ca xem nhanh</label>
+                                                    <select id="menuViewShift" class="form-select form-select-sm">
+                                                        <option value="lunch" selected>Ca trưa</option>
+                                                        <option value="dinner">Ca tối</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button class="btn btn-outline-primary btn-sm w-100" type="button" id="btnLoadMenuView">Xem</button>
+                                                </div>
+                                            </div>
+                                            <div id="menuViewDetail" class="small mt-2 text-muted">Chọn ngày và ca để xem thực đơn chi tiết.</div>
+                                        </div>
+                                        <div class="status-calendar-panel">
+                                            <div class="status-calendar-head">
+                                                <div>
+                                                    <h5 class="fw-bold mb-0" id="calMonthName">Tháng</h5>
+                                                    <div class="calendar-today-label" id="todayDateLabel">Hôm nay: --</div>
+                                                </div>
+                                                <div class="status-calendar-nav">
+                                                    <button type="button" class="btn btn-sm" id="btnCalPrevMonth" onclick="changeStatusCalendarMonth(-1)" aria-label="Tháng trước"><i class="bi bi-chevron-left"></i></button>
+                                                    <button type="button" class="btn btn-sm" id="btnCalNextMonth" onclick="changeStatusCalendarMonth(1)" aria-label="Tháng sau"><i class="bi bi-chevron-right"></i></button>
+                                                </div>
+                                            </div>
+                                            <small class="status-calendar-note d-block mb-2">Nhấn ô ngày tương lai để bật / tắt</small>
+                                            <div class="status-calendar-weekdays" aria-hidden="true">
+                                                <span>T2</span>
+                                                <span>T3</span>
+                                                <span>T4</span>
+                                                <span>T5</span>
+                                                <span>T6</span>
+                                                <span>T7</span>
+                                                <span>CN</span>
+                                            </div>
+                                            <div id="calendarGrid"></div>
+                                            <div class="calendar-legend">
+                                                <span><i class="dot reg"></i>Đã đăng ký</span>
+                                                <span><i class="dot cancel"></i>Đã hủy</span>
+                                                <span><i class="dot noshow"></i>Vắng không báo</span>
+                                                <span><i class="dot today"></i>Hôm nay</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tab-history">
+                                <div class="table-responsive">
+                                    <table class="table table-striped align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Ngày</th>
+                                                <th>Trạng thái</th>
+                                                <th>Đăng ký</th>
+                                                <th>Check-in</th>
+                                                <th>Hủy</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mealHistoryBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tab-complaint">
+                                <div class="row g-3">
+                                    <div class="col-lg-5" id="menu-khieu-nai">
+                                        <div class="border rounded p-3 bg-light">
+                                            <h6 class="fw-bold mb-3">Gửi khiếu nại suất ăn</h6>
+                                            <form id="complaintForm" class="row g-2">
+                                                <div class="col-12">
+                                                    <label class="small fw-bold">Ngày suất ăn</label>
+                                                    <input type="date" id="complaintDate" class="form-control" required>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="small fw-bold">Loại khiếu nại</label>
+                                                    <select id="complaintType" class="form-select" required>
+                                                        <option value="Chất lượng món ăn">Chất lượng món ăn</option>
+                                                        <option value="Khẩu phần">Khẩu phần</option>
+                                                        <option value="Vệ sinh an toàn thực phẩm">Vệ sinh an toàn thực phẩm</option>
+                                                        <option value="Thái độ phục vụ">Thái độ phục vụ</option>
+                                                        <option value="Khác">Khác</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="small fw-bold">Nội dung <span class="text-danger">*</span></label>
+                                                    <textarea id="complaintContent" class="form-control" rows="4" required placeholder="Mô tả chi tiết vấn đề..."></textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="small fw-bold">Ảnh minh chứng (bắt buộc)</label>
+                                                    <input type="file" id="complaintImages" class="form-control" accept=".jpg,.jpeg,image/jpeg" multiple required>
+                                                    <div class="complaint-preview-note">Tối đa 5 ảnh, chỉ định dạng JPEG/JPG.</div>
+                                                    <div id="complaintImagePreview" class="complaint-preview-grid"></div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-danger w-100 fw-bold">Gửi khiếu nại</button>
+                                                </div>
+                                            </form>
+                                            <div id="complaintMsg" class="small fw-bold mt-2"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7" id="menu-lich-su">
+                                        <h6 class="fw-bold">Lịch sử khiếu nại của tôi</h6>
+                                        <div id="complaintList" class="row g-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div>
+                            <div class="fw-bold">Cần xem quy trình vận hành?</div>
+                            <div class="small text-muted">Tất cả hướng dẫn đã được chuyển sang trang Trợ giúp để màn hình thao tác gọn hơn.</div>
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm" href="process_guide.html" target="_blank" rel="noopener">Mở trang Trợ giúp</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <div class="modal fade" id="profileModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Hồ sơ của tôi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileForm" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-4 text-center border-end">
+                                <label class="small fw-bold d-block mb-2">Ảnh hồ sơ</label>
+                                <img id="p_photo" src="assets/img/profile-placeholder.svg" class="img-thumbnail mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+                                <input type="file" name="photo" id="p_photo_input" class="form-control form-control-sm mb-3" accept="image/*">
+                                <label class="small fw-bold d-block mb-2">CMND/CCCD</label>
+                                <img id="p_id_card" src="assets/img/id-card-placeholder.svg" class="img-fluid border rounded mb-2">
+                                <small class="text-muted d-block fst-italic" style="font-size: 0.75rem;">(CMND/CCCD không thể thay đổi)</small>
+                            </div>
+                            <div class="col-md-8">
+                                <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Thông tin công việc</h6>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-6"><label class="small fw-bold">Họ và tên</label><input type="text" id="p_name" class="form-control profile-field-bg" readonly ></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Mã nhân viên</label><input type="text" id="p_student_id" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Mã hồ sơ</label><input type="text" id="p_reg_no" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Bộ phận</label><input type="text" id="p_dept" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Khu vực làm việc</label><input type="text" id="p_hall" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Email</label><input type="text" id="p_email" class="form-control profile-field-bg" readonly></div>
+                                </div>
+                                <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Thông tin cá nhân</h6>
+                                <div class="row g-2">
+                                    <div class="col-md-4"><label class="small fw-bold">Ngày sinh</label><input type="text" id="p_dob" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-4"><label class="small fw-bold">Nhóm máu</label><input type="text" id="p_bg" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-4"><label class="small fw-bold">Giới tính</label><input type="text" id="p_gender" class="form-control profile-field-bg" readonly></div>
+                                    
+                                    <div class="col-md-6"><label class="small fw-bold">Tên cha</label><input type="text" id="p_father" class="form-control profile-field-bg" readonly></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Tên mẹ</label><input type="text" id="p_mother" class="form-control profile-field-bg" readonly></div>
+                                    
+                                    <div class="col-md-6"><label class="small fw-bold">Địa chỉ thường trú</label><textarea id="p_perm_address" class="form-control profile-field-bg" rows="1" readonly></textarea></div>
+                                    <div class="col-md-6"><label class="small fw-bold">Địa chỉ hiện tại</label><textarea name="present_address" id="p_pres_address" class="form-control" rows="1"></textarea></div>
+
+                                    <div class="col-md-12"><label class="small fw-bold">Số điện thoại</label>
+                                        <div class="input-group">
+                                            <input type="text" name="phone" id="p_phone" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4 fw-bold">Lưu thay đổi</button></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="complaintImageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ảnh minh chứng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="complaintImageModalPreview" src="" alt="Ảnh minh chứng" class="img-fluid rounded border">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recharge modal removed: ví/nạp tiền đã vô hiệu -->
+
+    <!-- Generic confirm modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle">Xác nhận</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="confirmMessage">Bạn có chắc chắn?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" id="confirmCancelBtn" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="confirmOkBtn">Đồng ý</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+        <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="appToastBody">Thông báo</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/router.js"></script>
+    <script src="navbar.js"></script>
+    <script src="footer.js"></script>
+    <script>
+        // Unified confirmation dialog using Bootstrap modal
+        let confirmModal, confirmResolver = null;
+        const confirmEl = document.getElementById('confirmModal');
+        if (confirmEl && window.bootstrap?.Modal) {
+            confirmModal = window.bootstrap.Modal.getOrCreateInstance(confirmEl);
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            const safeResolve = (value) => {
+                if (confirmResolver) {
+                    confirmResolver(value);
+                    confirmResolver = null;
+                }
+            };
+
+            okBtn?.addEventListener('click', () => {
+                confirmModal.hide();
+                safeResolve(true);
+            });
+            cancelBtn?.addEventListener('click', () => safeResolve(false));
+            confirmEl.addEventListener('hidden.bs.modal', () => safeResolve(false));
+        }
+
+        function systemConfirm(opts = {}) {
+            if (!confirmModal) return Promise.resolve(true);
+            const title = document.getElementById('confirmTitle');
+            const message = document.getElementById('confirmMessage');
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            title.textContent = opts.title || 'Xác nhận';
+            message.innerHTML = (opts.message || '').replace(/\n/g, '<br>');
+            okBtn.textContent = opts.okText || 'Đồng ý';
+            cancelBtn.textContent = opts.cancelText || 'Thoát';
+
+            // Optional style variant
+            okBtn.className = `btn btn-${opts.variant || 'primary'}`;
+
+            return new Promise((resolve) => {
+                confirmResolver = resolve;
+                confirmModal.show();
+            });
+        }
+
+        function openProfileModal() {
+            const profileModalEl = document.getElementById('profileModal');
+            if (!profileModalEl || !window.bootstrap?.Modal) return;
+            window.bootstrap.Modal.getOrCreateInstance(profileModalEl).show();
+        }
+
+        if (window.AppRouter?.bootRolePage) {
+            AppRouter.bootRolePage('employee');
+        }
+
+        function logout() {
+            if (window.AppRouter?.logout) {
+                AppRouter.logout();
+            }
+        }
+
+        let globalDates = {};
+        let serverToday = "";
+        let serverTomorrow = "";
+        let calendarCursor = null;
+        let selectedTomorrowShift = 'lunch';
+        let cachedMonthStatus = null;
+        let cachedMealShifts = {}; // Track shifts for registered meals: { '2026-04-12': 'lunch', ... }
+        let complaintPreviewUrls = [];
+        let cutoffHour = 8;
+        let cutoffMinute = 0;
+        let cutoffClosedNotified = false;
+        let blockedAlertShown = false;
+        let lastNoShowNotifiedDate = '';
+        let historyLoaded = false;
+        let complaintLoaded = false;
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+        }
+        // Wallet/recharge disabled: keep stubs for compatibility
+        let selectedPaymentMethod = '';
+        function openRechargeModal() { showToast('Ví và nạp tiền đã bị vô hiệu.', 'warning'); }
+        function selectMethod() { showToast('Ví và nạp tiền đã bị vô hiệu.', 'warning'); }
+        function backToMethods() { /* no-op */ }
+        async function processRecharge() {
+            showToast('Ví và nạp tiền đã bị vô hiệu.', 'warning');
+            return '';
+        }
+
+        function clearComplaintPreview() {
+            complaintPreviewUrls.forEach((url) => {
+                try { URL.revokeObjectURL(url); } catch (_) {}
+            });
+            complaintPreviewUrls = [];
+            const preview = document.getElementById('complaintImagePreview');
+            if (preview) preview.innerHTML = '';
+        }
+
+        function renderComplaintPreview(files) {
+            const preview = document.getElementById('complaintImagePreview');
+            if (!preview) return;
+            clearComplaintPreview();
+
+            files.forEach((file, idx) => {
+                const url = URL.createObjectURL(file);
+                complaintPreviewUrls.push(url);
+                const img = document.createElement('img');
+                img.className = 'complaint-thumb';
+                img.src = url;
+                img.alt = `Ảnh minh chứng ${idx + 1}`;
+                img.loading = 'lazy';
+                img.setAttribute('data-full', url);
+                preview.appendChild(img);
+            });
+        }
+
+        function normalizeEvidenceImages(value) {
+            if (Array.isArray(value)) return value.filter((x) => typeof x === 'string' && x.trim() !== '');
+            if (typeof value === 'string' && value.trim()) {
+                try {
+                    const parsed = JSON.parse(value);
+                    if (Array.isArray(parsed)) return parsed.filter((x) => typeof x === 'string' && x.trim() !== '');
+                } catch (_) {}
+            }
+            return [];
+        }
+
+        function normalizeMenuDateInput(rawValue) {
+            const raw = String(rawValue || '').trim();
+            if (!raw) return '';
+
+            if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+                return raw;
+            }
+
+            const dmy = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+            if (dmy) {
+                return `${dmy[3]}-${dmy[2]}-${dmy[1]}`;
+            }
+
+            const parsed = new Date(raw);
+            if (!Number.isNaN(parsed.getTime())) {
+                return formatDateKey(parsed);
+            }
+
+            return '';
+        }
+
+        async function fetchJsonSafe(url, options = {}) {
+            const response = await fetch(url, options);
+            const rawText = await response.text();
+
+            const tryParse = (txt) => {
+                try {
+                    return JSON.parse(txt);
+                } catch (_) {
+                    return null;
+                }
+            };
+
+            let data = tryParse(rawText);
+            if (data !== null) return data;
+
+            const firstObj = rawText.indexOf('{');
+            const lastObj = rawText.lastIndexOf('}');
+            if (firstObj !== -1 && lastObj > firstObj) {
+                data = tryParse(rawText.slice(firstObj, lastObj + 1));
+                if (data !== null) return data;
+            }
+
+            const firstArr = rawText.indexOf('[');
+            const lastArr = rawText.lastIndexOf(']');
+            if (firstArr !== -1 && lastArr > firstArr) {
+                data = tryParse(rawText.slice(firstArr, lastArr + 1));
+                if (data !== null) return data;
+            }
+
+            throw new Error('Phản hồi API không hợp lệ: ' + rawText.slice(0, 180));
+        }
+
+        function showToast(message, type = 'primary') {
+            const toastEl = document.getElementById('appToast');
+            const bodyEl = document.getElementById('appToastBody');
+            if (!toastEl || !bodyEl) return;
+            toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+            bodyEl.textContent = message;
+            if (window.bootstrap?.Toast) {
+                window.bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2600 }).show();
+            }
+        }
+
+        function showRealtimeBanner(type, message) {
+            const host = document.getElementById('realtimeAlertHost');
+            if (!host) return;
+            const cls = type === 'danger' ? 'alert-danger' : 'alert-secondary';
+            const icon = type === 'danger' ? 'bi-shield-exclamation' : 'bi-bell-fill';
+            host.innerHTML = `<div class="alert ${cls} shadow-sm mb-0"><i class="bi ${icon} me-2"></i>${escapeHtml(message)}</div>`;
+        }
+
+        function getMenuStatusMeta(status) {
+            const map = {
+                approved: { text: 'Nguồn dữ liệu: thực đơn đã duyệt từ staff', cls: 'text-success' },
+                pending_approval: { text: 'Nguồn dữ liệu: thực đơn staff chờ duyệt', cls: 'text-warning' },
+                draft: { text: 'Nguồn dữ liệu: bản nháp thực đơn staff', cls: 'text-warning' },
+                rejected: { text: 'Nguồn dữ liệu: bản thực đơn staff bị từ chối', cls: 'text-danger' },
+                none: { text: 'Nguồn dữ liệu: chưa có thực đơn staff cho ngày này', cls: 'text-muted' }
+            };
+            return map[status] || { text: 'Nguồn dữ liệu: thực đơn staff', cls: 'text-muted' };
+        }
+
+        function renderMenuSourceStatus(status) {
+            const el = document.getElementById('menuSourceStatus');
+            if (!el) return;
+            const meta = getMenuStatusMeta(status);
+            el.className = `small mb-2 ${meta.cls}`;
+            el.textContent = meta.text;
+        }
+
+        function renderCalendarSkeleton() {
+            const grid = document.getElementById('calendarGrid');
+            if (!grid) return;
+            let html = '';
+            for (let i = 0; i < 35; i++) {
+                html += '<div class="calendar-day p-1"></div>';
+            }
+            grid.innerHTML = html;
+        }
+
+        function renderCalendarFallback(monthDate) {
+            const grid = document.getElementById('calendarGrid');
+            if (!grid) return;
+
+            const base = monthDate instanceof Date ? monthDate : new Date();
+            const cursor = new Date(base.getFullYear(), base.getMonth(), 1);
+            const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
+            const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1).getDay();
+            const leadingEmpty = (firstDay + 6) % 7;
+            const safeToday = normalizeDateKey(serverToday, formatDateKey(new Date()));
+
+            grid.innerHTML = '';
+            for (let j = 0; j < leadingEmpty; j++) {
+                grid.innerHTML += '<div class="calendar-day blank-day"></div>';
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dateKey = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const isToday = dateKey === safeToday;
+                const disabled = compareDateKeys(dateKey, safeToday) <= 0;
+                const cls = `${isToday ? 'today-day ' : ''}${disabled && !isToday ? 'disabled-day' : ''}`.trim();
+
+                grid.innerHTML += `
+                    <div class="calendar-day p-1 ${cls}">
+                        <span class="date-num">${i}</span>
+                    </div>
+                `;
+            }
+        }
+
+        function setDashboardLoading(isLoading) {
+            document.body.classList.toggle('dashboard-loading', !!isLoading);
+            if (isLoading) {
+                renderCalendarSkeleton();
+                return;
+            }
+
+            const grid = document.getElementById('calendarGrid');
+            if (!grid) return;
+
+            const hasDateNumbers = !!grid.querySelector('.date-num');
+            if (!hasDateNumbers) {
+                // Recover from skeleton-locked state if init sequence partially failed.
+                renderCalendarFallback(calendarCursor || new Date());
+            }
+        }
+
+        function applySelectedTomorrowShift() {
+            document.querySelectorAll('#shiftSelectorTomorrow .shift-chip').forEach((btn) => {
+                const shift = btn.getAttribute('data-shift') || 'lunch';
+                btn.classList.toggle('active', shift === selectedTomorrowShift);
+            });
+
+            const map = {
+                lunch: 'menuCellLunch',
+                dinner: 'menuCellDinner',
+                both: 'menuCellLunch'
+            };
+            Object.values(map).forEach((id) => {
+                const cell = document.getElementById(id);
+                if (cell) cell.classList.remove('active-shift');
+            });
+            const activeCell = document.getElementById(map[selectedTomorrowShift] || map.lunch);
+            if (activeCell) activeCell.classList.add('active-shift');
+
+            // Update shift display indicator
+            let shiftLabel = 'Ca Trưa (☀️)';
+            if (selectedTomorrowShift === 'dinner') {
+                shiftLabel = 'Ca Tối (🌙)';
+            } else if (selectedTomorrowShift === 'both') {
+                shiftLabel = 'Cả ngày (🌅)';
+            }
+            const displayEl = document.getElementById('currentShiftDisplay');
+            if (displayEl) displayEl.textContent = shiftLabel;
+        }
+
+        function selectShiftFromMenu(shift) {
+            if (!['lunch', 'dinner'].includes(shift)) return;
+            selectedTomorrowShift = shift;
+            localStorage.setItem('employee_selected_tomorrow_shift', selectedTomorrowShift);
+            applySelectedTomorrowShift();
+
+            const regShiftEl = document.getElementById('regShift');
+            if (regShiftEl) {
+                regShiftEl.value = shift;
+            }
+        }
+
+        function getTomorrowCutoffDateTime() {
+            if (!serverToday || !serverTomorrow) applyClientDateFallback();
+            const now = new Date();
+            const target = isDateKey(serverTomorrow) ? serverTomorrow : getDateWithOffset(formatDateKey(now), 1);
+
+            // Cutoff applies on the meal date (e.g., 08:00 on serverTomorrow)
+            const cutoff = new Date(`${target}T00:00:00`);
+            cutoff.setHours(cutoffHour, cutoffMinute, 0, 0);
+            return cutoff;
+        }
+
+        function isCutoffClosedNow() {
+            const now = new Date();
+            const cutoff = getTomorrowCutoffDateTime();
+            return now.getTime() >= cutoff.getTime();
+        }
+
+        function updateTomorrowActionAvailability(isClosed) {
+            const btnReg = document.getElementById('btnTomorrowRegister');
+            const btnCancel = document.getElementById('btnTomorrowCancel');
+            const msgBox = document.getElementById('tomorrowActionMsg');
+            // Do not hard-disable actions on client side because local device clock can be incorrect.
+            // Backend is the source of truth for cutoff validation.
+            if (btnReg && btnReg.dataset.loading !== '1') btnReg.disabled = false;
+            if (btnCancel && btnCancel.dataset.loading !== '1') btnCancel.disabled = false;
+
+            if (isClosed && msgBox && !cutoffClosedNotified) {
+                msgBox.innerHTML = '<span class="text-warning">Đã qua hạn đăng ký cho ngày mai.</span>';
+                cutoffClosedNotified = true;
+            }
+            if (!isClosed) {
+                cutoffClosedNotified = false;
+            }
+        }
+
+        async function pollRealtimeAlerts() {
+            if (document.visibilityState !== 'visible') return;
+            try {
+                const r = await fetchJsonSafe('api/get_realtime_alerts.php');
+                if (r.status !== 'success' || !r.data) return;
+
+                const alerts = Array.isArray(r.data.alerts) ? r.data.alerts : [];
+                const blocked = Number(r.data.is_blocked) === 1;
+
+                if (blocked && !blockedAlertShown) {
+                    blockedAlertShown = true;
+                    showRealtimeBanner('danger', 'Tài khoản của bạn đã bị khóa. Hệ thống sẽ đăng xuất ngay bây giờ.');
+                    showToast('Tài khoản đã bị khóa bởi Admin.', 'danger');
+                    setTimeout(() => { AppRouter.logout(); }, 2000);
+                    return;
+                }
+
+                const noShowAlert = alerts.find((a) => a.type === 'no_show');
+                if (noShowAlert && noShowAlert.meal_date && noShowAlert.meal_date !== lastNoShowNotifiedDate) {
+                    lastNoShowNotifiedDate = noShowAlert.meal_date;
+                    showRealtimeBanner('secondary', `Cảnh báo vắng không báo ngày ${noShowAlert.meal_date}. Vui lòng theo dõi lịch sử đăng ký.`);
+                    showToast(`Cảnh báo vắng không báo ngày ${noShowAlert.meal_date}.`, 'warning');
+                    loadMealHistory();
+                    loadTransactions();
+                }
+            } catch (err) {
+                // Silent fail to avoid UI noise on intermittent network issues.
+            }
+        }
+
+        async function checkAuth() {
+            setDashboardLoading(true);
+            try {
+                if (!window.AppRouter?.requireAuth) {
+                    throw new Error('Router unavailable');
+                }
+                const data = await AppRouter.requireAuth(['student', 'employee']);
+                if (!data) return;
+                await loadDashboardInit();
+            } catch (err) {
+                showToast('Không thể tải dữ liệu dashboard.', 'danger');
+            } finally {
+                setDashboardLoading(false);
+            }
+        }
+        checkAuth();
+
+        function startCutoffCountdown() {
+            const el = document.getElementById('cutoffCountdown');
+            if (!el) return;
+
+            const toVietnamTime = (date) => {
+                const vietnamTime = new Date(date.toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }));
+                const d = String(vietnamTime.getDate()).padStart(2, '0');
+                const m = String(vietnamTime.getMonth() + 1).padStart(2, '0');
+                const y = vietnamTime.getFullYear();
+                const h = String(vietnamTime.getHours()).padStart(2, '0');
+                const min = String(vietnamTime.getMinutes()).padStart(2, '0');
+                const s = String(vietnamTime.getSeconds()).padStart(2, '0');
+                return `${d}/${m}/${y} ${h}:${min}:${s}`;
+            };
+
+            const tick = () => {
+                const nowVN = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
+                const cutoffLocal = getTomorrowCutoffDateTime();
+                const cutoffVN = new Date(cutoffLocal.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
+                let diff = cutoffVN.getTime() - nowVN.getTime();
+                
+                // DEBUG: Log values (Vietnam time)
+                console.log('🕐 CUTOFF DEBUG (Giờ Việt Nam):', {
+                    now: toVietnamTime(nowVN),
+                    cutoffDateTime: toVietnamTime(cutoffVN),
+                    diffMs: diff,
+                    diffHours: Math.floor(diff / 3600000),
+                    serverTomorrow: serverTomorrow,
+                    cutoffHour: cutoffHour,
+                    cutoffMinute: cutoffMinute
+                });
+                
+                if (diff <= 0) {
+                    diff = 0;
+                    el.textContent = 'Đã hết hạn';
+                    updateTomorrowActionAvailability(true);
+                    return;
+                }
+
+                const hh = String(Math.floor(diff / 3600000)).padStart(2, '0');
+                const mm = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+                const ss = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+                el.textContent = `${hh}:${mm}:${ss}`;
+                updateTomorrowActionAvailability(false);
+            };
+
+            tick();
+            setInterval(tick, 1000);
+        }
+        // REMOVED: startCutoffCountdown() - will be called after loadDashboardInit() completes
+
+        function bindTomorrowShiftSelector() {
+            const savedShift = localStorage.getItem('employee_selected_tomorrow_shift');
+            if (savedShift === 'lunch' || savedShift === 'dinner' || savedShift === 'both') {
+                selectedTomorrowShift = savedShift;
+            }
+            applySelectedTomorrowShift();
+
+            const regShiftEl = document.getElementById('regShift');
+            if (regShiftEl && (selectedTomorrowShift === 'lunch' || selectedTomorrowShift === 'dinner')) {
+                regShiftEl.value = selectedTomorrowShift;
+            }
+
+            document.querySelectorAll('#shiftSelectorTomorrow .shift-chip').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    selectedTomorrowShift = btn.getAttribute('data-shift') || 'lunch';
+                    localStorage.setItem('employee_selected_tomorrow_shift', selectedTomorrowShift);
+                    applySelectedTomorrowShift();
+
+                    const regShift = document.getElementById('regShift');
+                    if (regShift && (selectedTomorrowShift === 'lunch' || selectedTomorrowShift === 'dinner')) {
+                        regShift.value = selectedTomorrowShift;
+                    }
+                });
+            });
+        }
+        bindTomorrowShiftSelector();
+
+        bindIfExists('regShift', 'change', function () {
+            if (!['lunch', 'dinner'].includes(this.value)) return;
+            selectedTomorrowShift = this.value;
+            localStorage.setItem('employee_selected_tomorrow_shift', selectedTomorrowShift);
+            applySelectedTomorrowShift();
+        });
+
+        async function registerTomorrowMeal() {
+            // If user selected 'both' shifts, handle separately
+            if (selectedTomorrowShift === 'both') {
+                return registerTomorrowMealBothShifts();
+            }
+
+            const msgBox = document.getElementById('tomorrowActionMsg');
+            const btnReg = document.getElementById('btnTomorrowRegister');
+            const btnCancel = document.getElementById('btnTomorrowCancel');
+            if (!serverTomorrow) applyClientDateFallback();
+            
+            msgBox.innerHTML = '<span class="text-muted">Đang đăng ký suất ăn ngày mai...</span>';
+            if (btnReg) { btnReg.disabled = true; btnReg.dataset.loading = '1'; btnReg.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang đăng ký'; }
+            if (btnCancel) { btnCancel.disabled = true; btnCancel.dataset.loading = '1'; }
+
+            try {
+                const r = await fetchJsonSafe('api/toggle_meal.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 1, date: serverTomorrow, meal_type: selectedTomorrowShift })
+                });
+                if (r.status === 'success') {
+                    applyLocalTomorrowStatus(1);
+                    msgBox.innerHTML = '<span class="text-success">Đăng ký thành công.</span>';
+                    showToast('Đăng ký suất ăn ngày mai thành công.', 'success');
+                    Promise.allSettled([
+                        refreshProfileWidgets(),
+                        refreshMealStats(),
+                        loadCalendar(true),
+                        loadMealHistory()
+                    ]).catch(() => {});
+                    historyLoaded = true;
+                } else {
+                    msgBox.innerHTML = `<span class="text-danger">${escapeHtml(r.message)}</span>`;
+                }
+            } catch (err) {
+                msgBox.innerHTML = `<span class="text-danger">${escapeHtml(err.message || 'Lỗi kết nối hệ thống.')}</span>`;
+            } finally {
+                if (btnReg) { btnReg.disabled = false; btnReg.dataset.loading = '0'; btnReg.innerHTML = 'Đăng ký'; }
+                if (btnCancel) { btnCancel.disabled = false; btnCancel.dataset.loading = '0'; }
+            }
+        }
+
+        async function cancelTomorrowMeal() {
+            const msgBox = document.getElementById('tomorrowActionMsg');
+            const btnReg = document.getElementById('btnTomorrowRegister');
+            const btnCancel = document.getElementById('btnTomorrowCancel');
+            if (!serverTomorrow) applyClientDateFallback();
+            
+            // Check what was actually registered for tomorrow
+            const registeredShifts = cachedMealShifts[serverTomorrow];
+            
+            // If both shifts registered, show selection dialog
+            if (registeredShifts === 'both') {
+                const selectedShifts = await showCancelShiftDialog();
+                if (!selectedShifts || selectedShifts.length === 0) return; // User cancelled
+                
+                msgBox.innerHTML = '<span class="text-muted">Đang xử lý hủy...</span>';
+                if (btnCancel) { btnCancel.disabled = true; btnCancel.dataset.loading = '1'; btnCancel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang hủy'; }
+                if (btnReg) { btnReg.disabled = true; btnReg.dataset.loading = '1'; }
+
+                try {
+                    const errors = [];
+                    const successes = [];
+                    
+                    // Process each selected shift
+                    for (const shiftType of selectedShifts) {
+                        const r = await fetchJsonSafe('api/toggle_meal.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: 0, date: serverTomorrow, meal_type: shiftType })
+                        });
+                        
+                        if (r.status === 'success') {
+                            successes.push(shiftType === 'lunch' ? 'Ca Trưa' : 'Ca Tối');
+                        } else {
+                            errors.push(`${shiftType === 'lunch' ? 'Ca Trưa' : 'Ca Tối'}: ${r.message}`);
+                        }
+                    }
+                    
+                    // Show results
+                    if (errors.length > 0 && successes.length === 0) {
+                        // All failed
+                        msgBox.innerHTML = `<span class="text-danger">Lỗi: ${errors.map(e => escapeHtml(e)).join(', ')}</span>`;
+                        showToast('Hủy không thành công: ' + errors[0], 'danger');
+                    } else if (successes.length > 0) {
+                        msgBox.innerHTML = `<span class="text-success">Hủy thành công: ${successes.join(', ')}</span>`;
+                        let toast = `Đã hủy ${successes.join(' + ')} ngày mai.`;
+                        if (errors.length > 0) {
+                            msgBox.innerHTML += `<br><span class="text-warning">Lỗi: ${errors.map(e => escapeHtml(e)).join(', ')}</span>`;
+                            toast += ` (Lỗi: ${errors[0].split(':')[0]})`;
+                        }
+                        showToast(toast, 'primary');
+                        
+                        Promise.allSettled([
+                            refreshProfileWidgets(),
+                            refreshMealStats(),
+                            loadCalendar(true),
+                            loadMealHistory()
+                        ]).catch(() => {});
+                        historyLoaded = true;
+                    }
+                } catch (err) {
+                    msgBox.innerHTML = `<span class="text-danger">${escapeHtml(err.message || 'Lỗi kết nối hệ thống.')}</span>`;
+                } finally {
+                    if (btnCancel) { btnCancel.disabled = false; btnCancel.dataset.loading = '0'; btnCancel.innerHTML = 'Hủy suất'; }
+                    if (btnReg) { btnReg.disabled = false; btnReg.dataset.loading = '0'; }
+                }
+                return;
+            }
+            
+            // If one shift is registered, auto-cancel it without dialog
+            if (registeredShifts === 'lunch' || registeredShifts === 'dinner') {
+                msgBox.innerHTML = '<span class="text-muted">Đang hủy suất ăn ngày mai...</span>';
+                if (btnCancel) { btnCancel.disabled = true; btnCancel.dataset.loading = '1'; btnCancel.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang hủy'; }
+                if (btnReg) { btnReg.disabled = true; btnReg.dataset.loading = '1'; }
+            } else {
+                // Nothing registered
+                msgBox.innerHTML = '<span class="text-warning">Chưa đăng ký suất ăn ngày mai.</span>';
+                showToast('Chưa đăng ký suất ăn ngày mai', 'info');
+                return;
+            }
+
+            try {
+                const r = await fetchJsonSafe('api/toggle_meal.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 0, date: serverTomorrow, meal_type: registeredShifts })
+                });
+                if (r.status === 'success') {
+                    applyLocalTomorrowStatus(0);
+                    msgBox.innerHTML = '<span class="text-success">Hủy thành công.</span>';
+                    showToast('Đã hủy suất ăn ngày mai.', 'primary');
+                    Promise.allSettled([
+                        refreshProfileWidgets(),
+                        refreshMealStats(),
+                        loadCalendar(true),
+                        loadMealHistory()
+                    ]).catch(() => {});
+                    historyLoaded = true;
+                } else {
+                    msgBox.innerHTML = `<span class="text-danger">${escapeHtml(r.message)}</span>`;
+                }
+            } catch (err) {
+                msgBox.innerHTML = `<span class="text-danger">${escapeHtml(err.message || 'Lỗi kết nối hệ thống.')}</span>`;
+            } finally {
+                if (btnCancel) { btnCancel.disabled = false; btnCancel.dataset.loading = '0'; btnCancel.innerHTML = 'Hủy suất'; }
+                if (btnReg) { btnReg.disabled = false; btnReg.dataset.loading = '0'; }
+            }
+        }
+
+        async function showCancelShiftDialog() {
+            return new Promise((resolve) => {
+                // Create modal dialog with checkboxes
+                const modal = document.createElement('div');
+                modal.className = 'modal fade';
+                modal.id = 'cancelShiftModal_' + Date.now();
+                modal.tabIndex = -1;
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Chọn ca hủy</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bạn muốn hủy ca nào? (Tích một hoặc nhiều)</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="lunch" id="chkLunch">
+                                    <label class="form-check-label" for="chkLunch">
+                                        ☀️ Ca Trưa
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="dinner" id="chkDinner">
+                                    <label class="form-check-label" for="chkDinner">
+                                        🌙 Ca Tối
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                                <button type="button" class="btn btn-danger" id="btnConfirmCancel">Hủy các ca đã chọn</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                const bsModal = new bootstrap.Modal(modal);
+                
+                const btnConfirm = modal.querySelector('#btnConfirmCancel');
+                btnConfirm.addEventListener('click', () => {
+                    const chkLunch = modal.querySelector('#chkLunch');
+                    const chkDinner = modal.querySelector('#chkDinner');
+                    const selected = [];
+                    if (chkLunch.checked) selected.push('lunch');
+                    if (chkDinner.checked) selected.push('dinner');
+                    
+                    // If nothing selected, show warning
+                    if (selected.length === 0) {
+                        alert('Vui lòng chọn ít nhất 1 ca để hủy');
+                        return;
+                    }
+                    
+                    bsModal.hide();
+                    resolve(selected);
+                });
+                
+                modal.addEventListener('hidden.bs.modal', () => {
+                    modal.remove();
+                    // Only resolve null if user clicked "Hủy bỏ" without selecting
+                    if (!resolve.called) {
+                        resolve(null);
+                    }
+                });
+                
+                bsModal.show();
+            });
+        }
+
+        async function registerTomorrowMealBothShifts() {
+            const msgBox = document.getElementById('tomorrowActionMsg');
+            const btnReg = document.getElementById('btnTomorrowRegister');
+            const btnCancel = document.getElementById('btnTomorrowCancel');
+            if (!serverTomorrow) applyClientDateFallback();
+            
+            msgBox.innerHTML = '<span class="text-muted">Đang đăng ký cả ngày (cả ca trưa và ca tối) ngày mai...</span>';
+            if (btnReg) { btnReg.disabled = true; btnReg.dataset.loading = '1'; btnReg.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang đăng ký'; }
+            if (btnCancel) { btnCancel.disabled = true; btnCancel.dataset.loading = '1'; }
+
+            try {
+                // Register lunch first
+                const rLunch = await fetchJsonSafe('api/toggle_meal.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 1, date: serverTomorrow, meal_type: 'lunch' })
+                });
+                
+                if (rLunch.status !== 'success') {
+                    msgBox.innerHTML = `<span class="text-danger">Lỗi đăng ký ca trưa: ${escapeHtml(rLunch.message)}</span>`;
+                    return;
+                }
+
+                // Register dinner
+                const rDinner = await fetchJsonSafe('api/toggle_meal.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 1, date: serverTomorrow, meal_type: 'dinner' })
+                });
+                
+                if (rDinner.status !== 'success') {
+                    msgBox.innerHTML = `<span class="text-danger">Lỗi đăng ký ca tối: ${escapeHtml(rDinner.message)}</span>`;
+                    return;
+                }
+
+                // Both shifts registered successfully
+                applyLocalTomorrowStatus(1);
+                msgBox.innerHTML = '<span class="text-success">Đăng ký cả ngày thành công (Ca trưa ☀️ + Ca tối 🌙).</span>';
+                showToast('Đã đăng ký cả ngày ngày mai thành công!', 'success');
+                Promise.allSettled([
+                    refreshProfileWidgets(),
+                    refreshMealStats(),
+                    loadCalendar(true),
+                    loadMealHistory()
+                ]).catch(() => {});
+                historyLoaded = true;
+
+            } catch (err) {
+                msgBox.innerHTML = `<span class="text-danger">${escapeHtml(err.message || 'Lỗi kết nối hệ thống.')}</span>`;
+            } finally {
+                if (btnReg) { btnReg.disabled = false; btnReg.dataset.loading = '0'; btnReg.innerHTML = 'Đăng ký'; }
+                if (btnCancel) { btnCancel.disabled = false; btnCancel.dataset.loading = '0'; }
+            }
+        }
+
+        function renderMealStats(summary) {
+            const safeSummary = summary || {};
+            const statRegisteredEl = document.getElementById('statRegistered');
+            const statCheckedInEl = document.getElementById('statCheckedIn');
+            const statNoShowEl = document.getElementById('statNoShow');
+            const statCancelledEl = document.getElementById('statCancelled');
+            if (statRegisteredEl) statRegisteredEl.innerText = Number(safeSummary.registered || 0);
+            if (statCheckedInEl) statCheckedInEl.innerText = Number(safeSummary.checked_in || 0);
+            if (statNoShowEl) statNoShowEl.innerText = Number(safeSummary.no_show || 0);
+            if (statCancelledEl) statCancelledEl.innerText = Number(safeSummary.cancelled || 0);
+        }
+
+        function getDateWithOffset(baseDateStr, offset) {
+            const d = new Date(baseDateStr + 'T00:00:00');
+            d.setDate(d.getDate() + offset);
+            return formatDateKey(d);
+        }
+
+        function formatDateKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function isDateKey(value) {
+            return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
+        }
+
+        function normalizeDateKey(value, fallback) {
+            if (isDateKey(value)) return String(value);
+            return String(fallback || '');
+        }
+
+        function compareDateKeys(a, b) {
+            const aDate = new Date(String(a) + 'T00:00:00');
+            const bDate = new Date(String(b) + 'T00:00:00');
+            return aDate.getTime() - bDate.getTime();
+        }
+
+        function getMinSelectableDate() {
+            const today = formatDateKey(new Date());
+            const normalizedToday = normalizeDateKey(serverToday, today);
+            const normalizedTomorrow = normalizeDateKey(serverTomorrow, getDateWithOffset(normalizedToday, 1));
+            if (isDateKey(normalizedTomorrow)) return normalizedTomorrow;
+            const base = normalizedToday;
+            return getDateWithOffset(base, 1);
+        }
+
+        function applyClientDateFallback() {
+            const today = formatDateKey(new Date());
+            const tomorrow = getDateWithOffset(today, 1);
+            if (!serverToday) serverToday = today;
+            if (!serverTomorrow) serverTomorrow = tomorrow;
+
+            const dateTomorrowEl = document.getElementById('dateTomorrow');
+            const regDateEl = document.getElementById('regDate');
+            const menuViewDateEl = document.getElementById('menuViewDate');
+
+            if (dateTomorrowEl) dateTomorrowEl.innerText = serverTomorrow;
+            if (regDateEl) {
+                regDateEl.min = serverTomorrow;
+                if (!regDateEl.value || regDateEl.value < serverTomorrow) {
+                    regDateEl.value = serverTomorrow;
+                }
+            }
+            if (menuViewDateEl && !menuViewDateEl.value) {
+                menuViewDateEl.value = serverTomorrow;
+            }
+        }
+
+        function syncPlanCalendarFromInput() {
+            const regDate = document.getElementById('regDate');
+            if (!regDate || !regDate.value) return;
+            const minDate = getMinSelectableDate();
+            if (regDate.value < minDate) {
+                regDate.value = minDate;
+            }
+            selectedPlanDate = regDate.value;
+            const parts = regDate.value.split('-').map(Number);
+            if (parts.length === 3) {
+                planCalCursor = new Date(parts[0], parts[1] - 1, 1);
+            }
+            renderPlanCalendar();
+        }
+
+        function renderPlanCalendar() {
+            const grid = document.getElementById('planCalendarGrid');
+            const label = document.getElementById('planCalMonthLabel');
+            if (!grid || !label || !planCalCursor) return;
+
+            label.innerText = planCalCursor.toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
+            grid.innerHTML = '';
+
+            const year = planCalCursor.getFullYear();
+            const month = planCalCursor.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startIndex = (firstDay.getDay() + 6) % 7;
+            const todayKey = formatDateKey(new Date());
+            const minDate = getMinSelectableDate();
+
+            for (let i = 0; i < startIndex; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'plan-cal-empty';
+                grid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                const dateKey = formatDateKey(dateObj);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'plan-cal-day';
+                btn.innerText = day;
+                const isPastOrToday = compareDateKeys(dateKey, minDate) < 0;
+
+                if (dateKey === todayKey) btn.classList.add('is-today');
+                if (selectedPlanDate === dateKey) btn.classList.add('is-selected');
+
+                if (isPastOrToday) {
+                    btn.classList.add('is-disabled');
+                    btn.disabled = true;
+                } else {
+                    btn.addEventListener('click', () => {
+                        selectedPlanDate = dateKey;
+                        const regDate = document.getElementById('regDate');
+                        regDate.value = dateKey;
+                        renderPlanCalendar();
+                    });
+                }
+
+                grid.appendChild(btn);
+            }
+        }
+
+        function initPlanCalendar() {
+            const fallback = serverTomorrow || formatDateKey(new Date());
+            const regDateEl = document.getElementById('regDate');
+            const minDate = getMinSelectableDate();
+            selectedPlanDate = regDateEl ? (regDateEl.value || fallback) : fallback;
+            if (selectedPlanDate < minDate) {
+                selectedPlanDate = minDate;
+                if (regDateEl) regDateEl.value = minDate;
+            }
+            const parts = selectedPlanDate.split('-').map(Number);
+            if (parts.length === 3) {
+                planCalCursor = new Date(parts[0], parts[1] - 1, 1);
+            } else {
+                const now = new Date();
+                planCalCursor = new Date(now.getFullYear(), now.getMonth(), 1);
+            }
+            renderPlanCalendar();
+        }
+
+        function getSelectedPlanDates() {
+            const regModeEl = document.getElementById('regMode');
+            const regDateEl = document.getElementById('regDate');
+            const regWeekPatternEl = document.getElementById('regWeekPattern');
+            const mode = regModeEl ? regModeEl.value : 'day';
+            const baseDate = regDateEl ? (regDateEl.value || serverTomorrow) : serverTomorrow;
+            const pattern = regWeekPatternEl ? regWeekPatternEl.value : 'workdays';
+            const minDate = getMinSelectableDate();
+
+            if (!baseDate) return [];
+            if (mode !== 'week') return baseDate >= minDate ? [baseDate] : [];
+
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const dateStr = getDateWithOffset(baseDate, i);
+                const day = new Date(dateStr + 'T00:00:00').getDay();
+                if ((pattern === 'fullweek' || (day >= 1 && day <= 5)) && dateStr >= minDate) {
+                    dates.push(dateStr);
+                }
+            }
+            return dates;
+        }
+
+        function getQuickDates(type) {
+            const base = serverTomorrow || getDateWithOffset(formatDateKey(new Date()), 1);
+            const dates = [];
+
+            if (type === 'next3') {
+                for (let i = 0; i < 3; i++) {
+                    dates.push(getDateWithOffset(base, i));
+                }
+                return dates;
+            }
+
+            if (type === 'workdays') {
+                for (let i = 0; i < 7; i++) {
+                    const d = getDateWithOffset(base, i);
+                    const day = new Date(d + 'T00:00:00').getDay();
+                    if (day >= 1 && day <= 5) {
+                        dates.push(d);
+                    }
+                }
+                return dates;
+            }
+
+            return [];
+        }
+
+        async function applyRegistrationForDates(status, dates, shift, messageBoxId) {
+            const msgBox = document.getElementById(messageBoxId || 'regActionMsg');
+            if (!msgBox) return;
+
+            const minDate = getMinSelectableDate();
+            const validDates = (dates || []).filter((d) => d >= minDate);
+
+            if (!validDates || validDates.length === 0) {
+                msgBox.innerHTML = '<span class="text-danger">Không có ngày hợp lệ để xử lý.</span>';
+                return;
+            }
+            
+            // Show confirmation popup
+            const action = status === 1 ? 'đăng ký' : 'hủy';
+            const ok = await systemConfirm({
+                title: 'Xác nhận',
+                message: `Bạn có chắc muốn ${action} ${validDates.length} ngày?\n\nNgày: ${validDates.slice(0, 3).join(', ')}${validDates.length > 3 ? ', ...' : ''}`,
+                okText: status === 1 ? 'Đăng ký' : 'Hủy',
+                cancelText: 'Thoát',
+                variant: status === 1 ? 'success' : 'danger'
+            });
+            if (!ok) return;
+
+            msgBox.innerHTML = '<span class="text-muted">Đang xử lý, vui lòng chờ...</span>';
+
+            let success = 0;
+            const errors = [];
+
+            for (const mealDate of validDates) {
+                try {
+                    let result;
+                    if (status === 1) {
+                        result = await fetchJsonSafe('api/toggle_meal.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: 1, date: mealDate, meal_type: shift || 'lunch' })
+                        });
+                    } else {
+                        result = await fetchJsonSafe('api/toggle_meal.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: 0, date: mealDate, meal_type: shift || 'lunch' })
+                        });
+                    }
+
+                    if (result.status === 'success') {
+                        success++;
+                    } else {
+                        errors.push(`${mealDate}: ${escapeHtml(result.message)}`);
+                    }
+                } catch (err) {
+                    errors.push(`${mealDate}: ${escapeHtml(err.message || 'Lỗi kết nối hệ thống')}`);
+                }
+            }
+
+            if (errors.length === 0) {
+                msgBox.innerHTML = `<span class="text-success">Thành công ${success}/${validDates.length} ngày.</span>`;
+            } else {
+                msgBox.innerHTML = `<span class="text-warning">Hoàn tất ${success}/${validDates.length} ngày. Có lỗi: ${errors[0]}</span>`;
+            }
+
+            refreshProfileWidgets();
+            loadCalendar(true);
+            loadMealHistory();
+            historyLoaded = true;
+        }
+
+        async function applyPlanRegistration(status) {
+            const regShiftEl = document.getElementById('regShift');
+            const shift = regShiftEl ? regShiftEl.value : 'lunch';
+            const dates = getSelectedPlanDates();
+            await applyRegistrationForDates(status, dates, shift, 'regActionMsg');
+        }
+
+        async function loadMenuDetailBySelection() {
+            const dateInput = document.getElementById('menuViewDate');
+            const rawDate = (dateInput && dateInput.value) ? dateInput.value : serverTomorrow;
+            const date = normalizeMenuDateInput(rawDate);
+            const menuViewShiftEl = document.getElementById('menuViewShift');
+            const shift = menuViewShiftEl ? menuViewShiftEl.value : 'lunch';
+            const div = document.getElementById('menuViewDetail');
+
+            if (!div) return;
+            if (!date) {
+                div.innerHTML = '<span class="text-danger">Ngày lọc không hợp lệ. Vui lòng chọn lại.</span>';
+                return;
+            }
+
+            if (dateInput && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                dateInput.value = date;
+            }
+
+            div.innerHTML = '<span class="text-muted">Đang tải thực đơn...</span>';
+
+            try {
+                const r = await fetchJsonSafe(`api/get_menu.php?date=${encodeURIComponent(date)}`);
+                if (r.status !== 'success') {
+                    div.innerHTML = `<span class="text-danger">${escapeHtml(r.message || 'Không tải được thực đơn.')}</span>`;
+                    return;
+                }
+
+                const labels = {
+                    lunch: 'Ca trưa',
+                    dinner: 'Ca tối'
+                };
+                const statusMeta = getMenuStatusMeta(r.menu_status || 'none');
+                renderMenuSourceStatus(r.menu_status || 'none');
+
+                const selectedMeal = r.data[shift] || 'Chưa có thực đơn';
+                div.innerHTML = `
+                    <div class="small text-muted">Ngày ${escapeHtml(date)} - ${escapeHtml(labels[shift])}</div>
+                    <div class="fw-bold mt-1">${escapeHtml(selectedMeal)}</div>
+                    <div class="small mt-2 ${escapeHtml(statusMeta.cls)}">${escapeHtml(statusMeta.text)}</div>
+                    <div class="small mt-1 text-muted">
+                        Trưa: ${escapeHtml(r.data.lunch || '-')} | Tối: ${escapeHtml(r.data.dinner || '-')}
+                    </div>
+                `;
+            } catch (err) {
+                div.innerHTML = `<span class="text-danger">${escapeHtml(err.message || 'Lỗi hệ thống khi tải thực đơn.')}</span>`;
+            }
+        }
+
+        async function refreshProfileWidgets() {
+            const applyWidgetPayload = (payload) => {
+                const s = payload.profile || payload.data || {};
+                const dates = payload.dates || {};
+                const timestamp = new Date().getTime();
+
+                const userNameEl = document.getElementById('userName');
+                const studentIdEl = document.getElementById('studentId');
+                const userPhotoEl = document.getElementById('userPhoto');
+                const navAvatarEl = document.getElementById('navUserAvatar');
+                if (userNameEl) userNameEl.innerText = s.full_name || '-';
+                if (studentIdEl) studentIdEl.innerText = 'Mã nhân viên: ' + (s.student_id_no || '-');
+                if (s.photo_path && userPhotoEl) userPhotoEl.src = s.photo_path + '?t=' + timestamp;
+                if (s.photo_path && navAvatarEl) navAvatarEl.src = s.photo_path + '?t=' + timestamp;
+
+                if (dates.today) serverToday = dates.today;
+                if (dates.tomorrow) serverTomorrow = dates.tomorrow;
+
+                if (dates.tomorrow) {
+                    const dateTomorrowEl = document.getElementById('dateTomorrow');
+                    if (dateTomorrowEl) dateTomorrowEl.innerText = dates.tomorrow;
+                }
+
+                applySelectedTomorrowShift();
+
+                setupToggle(null, 'statusTextTomorrow', Number(payload.meal_tomorrow || 0), dates.tomorrow || serverTomorrow);
+                if (dates.tomorrow) {
+                    const regDateEl = document.getElementById('regDate');
+                    if (regDateEl) regDateEl.min = dates.tomorrow;
+                }
+                const regDateEl = document.getElementById('regDate');
+                if (dates.tomorrow && regDateEl && (!regDateEl.value || regDateEl.value < dates.tomorrow)) {
+                    regDateEl.value = dates.tomorrow;
+                }
+                const menuViewDateEl = document.getElementById('menuViewDate');
+                if (dates.tomorrow && menuViewDateEl && !menuViewDateEl.value) {
+                    menuViewDateEl.value = dates.tomorrow;
+                }
+
+                try { syncPlanCalendarFromInput(); } catch (_) {}
+                try { loadMenuDetailBySelection(); } catch (_) {}
+            };
+
+            try {
+                const r = await fetchJsonSafe('api/profile_widget_data.php');
+                if (r.status !== 'success') {
+                    throw new Error(r.message || 'Widget refresh API failed');
+                }
+                globalDates = r.dates || globalDates;
+                applyWidgetPayload(r);
+            } catch (err) {
+                try {
+                    // Fallback to legacy endpoint when lightweight API is unavailable.
+                    const rLegacy = await fetchJsonSafe('api/get_profile.php');
+                    if (rLegacy.status !== 'success') {
+                        throw new Error(rLegacy.message || 'Legacy profile refresh failed');
+                    }
+                    globalDates = rLegacy.dates || globalDates;
+                    applyWidgetPayload(rLegacy);
+                } catch (fallbackErr) {
+                    try {
+                        // Final fallback to unified init endpoint.
+                        const rInit = await fetchJsonSafe('api/dashboard_init.php');
+                        if (rInit.status !== 'success') {
+                            throw new Error(rInit.message || 'Dashboard init refresh failed');
+                        }
+                        globalDates = rInit.dates || globalDates;
+                        applyWidgetPayload(rInit);
+                    } catch (_) {
+                        // Non-blocking fallback: keep current UI state and avoid interrupting successful actions.
+                    }
+                }
+            }
+        }
+
+        async function refreshMealStats() {
+            try {
+                const r = await fetchJsonSafe('api/dashboard_init.php');
+                if (r.status === 'success') {
+                    renderMealStats(r.month_stats || {});
+                }
+            } catch (_) {
+                // Keep the current counters when the summary refresh is unavailable.
+            }
+        }
+
+        function setupToggle(btnId, textId, status, date) {
+            const text = document.getElementById(textId);
+            const chip = document.getElementById('heroStatusChip');
+            if (status == 1) {
+                if (text) text.textContent = 'Đã đăng ký';
+                if (chip) chip.className = 'status-chip registered';
+            } else {
+                if (text) text.textContent = 'Chưa đăng ký';
+                if (chip) chip.className = 'status-chip not-registered';
+            }
+        }
+
+        function applyLocalTomorrowStatus(newStatus) {
+            const normalized = Number(newStatus) === 1 ? 1 : 0;
+            setupToggle(null, 'statusTextTomorrow', normalized, serverTomorrow);
+
+            if (cachedMonthStatus && serverTomorrow) {
+                cachedMonthStatus.data = cachedMonthStatus.data || {};
+                cachedMonthStatus.details = cachedMonthStatus.details || {};
+                cachedMonthStatus.data[serverTomorrow] = normalized;
+                cachedMonthStatus.details[serverTomorrow] = {
+                    is_active: normalized,
+                    status: normalized === 1 ? 'registered' : 'cancelled'
+                };
+            }
+        }
+
+        async function toggleMeal(el, isChecked, date) {
+            try {
+                const result = await fetchJsonSafe('api/toggle_meal.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: isChecked ? 1 : 0, date: date })
+                });
+                if (result.status === 'success') {
+                    refreshProfileWidgets();
+                    loadCalendar(true);
+                } else {
+                    showToast(result.message || 'Không thể cập nhật suất ăn.', 'danger');
+                    if (el) el.checked = !isChecked;
+                }
+            } catch (err) {
+                showToast(err.message || 'Lỗi kết nối khi cập nhật suất ăn.', 'danger');
+                if (el) el.checked = !isChecked;
+            }
+        }
+
+        function formatMonthKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            return `${y}-${m}`;
+        }
+
+        function setCalendarCursorFromMonthKey(monthKey) {
+            const parts = String(monthKey || '').split('-').map(Number);
+            const y = parts[0] || new Date().getFullYear();
+            const m = parts[1] || (new Date().getMonth() + 1);
+            calendarCursor = new Date(y, m - 1, 1);
+        }
+
+        async function resolveRegisteredShiftForDate(dateStr) {
+            const cached = cachedMealShifts[dateStr];
+            if (cached === 'lunch' || cached === 'dinner' || cached === 'both') {
+                return cached;
+            }
+
+            try {
+                const monthKey = String(dateStr || '').slice(0, 7);
+                const r = await fetchJsonSafe(`api/get_month_status.php?month=${encodeURIComponent(monthKey)}`);
+                const detail = (r && r.details && r.details[dateStr]) ? r.details[dateStr] : null;
+                const isActive = !!(detail && (detail.status === 'registered' || detail.status === 'checked_in' || Number(detail.is_active) === 1));
+                if (!isActive) return null;
+
+                const mealType = detail && detail.meal_type ? detail.meal_type : 'lunch';
+                if (mealType === 'lunch' || mealType === 'dinner' || mealType === 'both') {
+                    cachedMealShifts[dateStr] = mealType;
+                    return mealType;
+                }
+
+                cachedMealShifts[dateStr] = 'lunch';
+                return 'lunch';
+            } catch (_) {
+                return null;
+            }
+        }
+
+        async function loadCalendar(forceFetch = false) {
+            try {
+                if (!serverToday) {
+                    applyClientDateFallback();
+                }
+                const safeToday = normalizeDateKey(serverToday, formatDateKey(new Date()));
+                serverToday = safeToday;
+                const todayLabelEl = document.getElementById('todayDateLabel');
+                if (todayLabelEl) {
+                    const todayText = safeToday;
+                    todayLabelEl.textContent = `Hôm nay: ${todayText}`;
+                }
+                if (!calendarCursor) {
+                    setCalendarCursorFromMonthKey(safeToday.slice(0, 7));
+                }
+
+                const cursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
+                const month = formatMonthKey(cursor);
+                const monthNameEl = document.getElementById('calMonthName');
+                if (monthNameEl) {
+                    monthNameEl.innerText = cursor.toLocaleString('default', { month: 'long', year: 'numeric' });
+                }
+
+                let mealData = {};
+                let detailData = {};
+                if (!forceFetch && cachedMonthStatus && cachedMonthStatus.month === month) {
+                    mealData = cachedMonthStatus.data || {};
+                    detailData = cachedMonthStatus.details || {};
+                } else {
+                    try {
+                        const r = await fetchJsonSafe(`api/get_month_status.php?month=${month}`);
+                        mealData = r.data || {};
+                        detailData = r.details || {};
+                        cachedMonthStatus = { month, data: mealData, details: detailData };
+                    } catch (_) {
+                        mealData = {};
+                        detailData = {};
+                    }
+                }
+
+                const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
+                const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1).getDay();
+                const leadingEmpty = (firstDay + 6) % 7;
+                const grid = document.getElementById('calendarGrid');
+                if (!grid) return;
+                grid.innerHTML = '';
+
+                for (let j = 0; j < leadingEmpty; j++) {
+                    grid.innerHTML += '<div class="calendar-day blank-day"></div>';
+                }
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    let year = cursor.getFullYear();
+                    let m = (cursor.getMonth() + 1).toString().padStart(2, '0');
+                    let d = i.toString().padStart(2, '0');
+                    let dateStr = `${year}-${m}-${d}`;
+
+                    let isClickable = compareDateKeys(dateStr, safeToday) > 0;
+                    let status = mealData[dateStr];
+                    let detail = detailData[dateStr] || null;
+                    let colorClass = '';
+                    let badge = '';
+
+                    if (detail && detail.meal_type && (detail.meal_type === 'lunch' || detail.meal_type === 'dinner' || detail.meal_type === 'both')) {
+                        cachedMealShifts[dateStr] = detail.meal_type;
+                    } else if (detail && (detail.status === 'cancelled' || detail.status === 'no_show' || Number(detail.is_active) === 0)) {
+                        delete cachedMealShifts[dateStr];
+                    }
+
+                    if (dateStr === safeToday) {
+                        colorClass = 'today-day';
+                        badge = '<span class="today-flag">Hôm nay</span>';
+                    } else if (detail && detail.status === 'no_show') {
+                        colorClass = 'no-show-meal';
+                        badge = '<i class="bi bi-dash-circle text-secondary"></i>';
+                    } else if (detail && detail.status === 'cancelled') {
+                        colorClass = 'inactive-meal';
+                        badge = '<i class="bi bi-x text-danger"></i>';
+                    } else if (detail && (detail.status === 'registered' || detail.status === 'checked_in')) {
+                        colorClass = 'active-meal';
+                        const registeredShift = cachedMealShifts[dateStr] || 'lunch';
+                        let shiftIcon = '☀️';
+                        if (registeredShift === 'both') shiftIcon = '🌅';
+                        else if (registeredShift === 'dinner') shiftIcon = '🌙';
+                        badge = detail.status === 'checked_in'
+                            ? `<i class="bi bi-check2-circle text-primary"></i>${shiftIcon}`
+                            : `<i class="bi bi-check text-success"></i>${shiftIcon}`;
+                    } else if (status == 1) {
+                        colorClass = 'active-meal';
+                        const registeredShift = cachedMealShifts[dateStr] || 'lunch';
+                        let shiftIcon = '☀️';
+                        if (registeredShift === 'both') shiftIcon = '🌅';
+                        else if (registeredShift === 'dinner') shiftIcon = '🌙';
+                        badge = `<i class="bi bi-check text-success"></i>${shiftIcon}`;
+                    } else if (status == 0) {
+                        colorClass = 'inactive-meal';
+                        badge = '<i class="bi bi-x text-danger"></i>';
+                    }
+
+                    if (!isClickable && dateStr !== safeToday) colorClass += ' disabled-day';
+
+                    const nextStatus = status == 1 ? 0 : 1;
+                    const clickClass = isClickable ? ' clickable-day' : '';
+                    let borderStyle = '';
+
+                    grid.innerHTML += `
+                        <div class="calendar-day p-1 ${colorClass}${clickClass}" style="${borderStyle}" data-date="${dateStr}" data-next-status="${nextStatus}" data-clickable="${isClickable ? 1 : 0}" tabindex="${isClickable ? 0 : -1}">
+                            <span class="date-num">${i}</span>
+                            <span class="meal-badge">${badge}</span>
+                        </div>
+                    `;
+                }
+
+                grid.querySelectorAll('.calendar-day[data-clickable="1"]').forEach((cell) => {
+                    cell.addEventListener('click', () => {
+                        const d = cell.getAttribute('data-date') || '';
+                        const s = Number(cell.getAttribute('data-next-status') || '0');
+                        toggleCalendarDate(d, s);
+                    });
+                    cell.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const d = cell.getAttribute('data-date') || '';
+                            const s = Number(cell.getAttribute('data-next-status') || '0');
+                            toggleCalendarDate(d, s);
+                        }
+                    });
+                });
+            } catch (_) {
+                renderCalendarFallback(calendarCursor || new Date());
+            }
+        }
+
+        function changeStatusCalendarMonth(delta) {
+            if (!calendarCursor) {
+                setCalendarCursorFromMonthKey((serverToday || formatDateKey(new Date())).slice(0, 7));
+            }
+            calendarCursor.setMonth(calendarCursor.getMonth() + Number(delta || 0));
+            loadCalendar(true);
+        }
+
+        function formatMealStatusLabel(row) {
+            const status = row.status || (row.is_active == 1 ? 'registered' : 'cancelled');
+            if (status === 'checked_in') return '<span class="badge bg-success">Đã check-in</span>';
+            if (status === 'registered') return '<span class="badge bg-primary">Đã đăng ký</span>';
+            if (status === 'cancelled') return '<span class="badge bg-secondary">Đã hủy</span>';
+            if (status === 'no_show') return '<span class="badge bg-danger">Vắng không báo</span>';
+            return '<span class="badge bg-light text-dark border">Không xác định</span>';
+        }
+
+        async function loadMealHistory() {
+            historyLoaded = true;
+            const tbody = document.getElementById('mealHistoryBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Đang tải...</td></tr>';
+            try {
+                const res = await fetch('api/get_meal_history.php');
+                const r = await res.json();
+
+                if (r.status !== 'success' || !r.data || r.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Chưa có lịch sử đăng ký.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                r.data.forEach(row => {
+                    const regTime = row.registration_time ? escapeHtml(row.registration_time) : '-';
+                    const checkin = row.check_in_time ? escapeHtml(row.check_in_time) : '-';
+                    const cancel = row.cancel_time ? escapeHtml(row.cancel_time) : '-';
+                    const mealDate = escapeHtml(row.meal_date || '-');
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${mealDate}</td>
+                            <td>${formatMealStatusLabel(row)}</td>
+                            <td>${regTime}</td>
+                            <td>${checkin}</td>
+                            <td>${cancel}</td>
+                        </tr>`;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-3">Lỗi khi tải lịch sử.</td></tr>';
+            }
+        }
+
+        async function loadComplaints() {
+            complaintLoaded = true;
+            const list = document.getElementById('complaintList');
+            if (!list) return;
+
+            list.innerHTML = '<div class="col-12 text-muted small text-center py-2">Đang tải...</div>';
+            try {
+                const res = await fetch('api/get_my_complaints.php');
+                const r = await res.json();
+
+                if (r.status !== 'success' || !r.data || r.data.length === 0) {
+                    list.innerHTML = '<div class="col-12 text-muted small text-center py-2">Chưa có khiếu nại nào.</div>';
+                    return;
+                }
+
+                list.innerHTML = '';
+                r.data.forEach(item => {
+                    const statusMap = {
+                        new: '<span class="badge bg-primary">Mới</span>',
+                        in_progress: '<span class="badge bg-warning text-dark">Đang xử lý</span>',
+                        resolved: '<span class="badge bg-success">Đã xử lý</span>',
+                        rejected: '<span class="badge bg-secondary">Từ chối</span>'
+                    };
+                    const statusBadge = statusMap[item.status] || '<span class="badge bg-light text-dark border">Không xác định</span>';
+                    const complaintType = escapeHtml(item.complaint_type || '');
+                    const mealDate = escapeHtml(item.meal_date || '');
+                    const createdAt = escapeHtml(item.created_at || '');
+                    const content = escapeHtml(item.content || '');
+                    const adminNote = item.admin_note ? escapeHtml(item.admin_note) : '';
+                    const evidenceImages = normalizeEvidenceImages(item.evidence_images);
+                    const evidenceHtml = evidenceImages.length > 0
+                        ? `<div class="complaint-preview-grid mt-2">${evidenceImages.map((src, idx) => {
+                            const safeSrc = escapeHtml(src);
+                            return `<img class="complaint-thumb" src="${safeSrc}" alt="minh chứng ${idx + 1}" data-full="${safeSrc}" loading="lazy">`;
+                        }).join('')}</div>`
+                        : '<div class="small text-muted mt-2">Không có ảnh minh chứng.</div>';
+
+                    list.innerHTML += `
+                        <div class="col-12">
+                            <div class="border rounded p-3 bg-white shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>${complaintType}</strong>
+                                    ${statusBadge}
+                                </div>
+                                <div class="small text-muted">Ngày suất ăn: ${mealDate} | Gửi lúc: ${createdAt}</div>
+                                <div class="mt-2">${content}</div>
+                                ${evidenceHtml}
+                                ${adminNote ? `<div class="small text-success mt-2"><strong>Phản hồi:</strong> ${adminNote}</div>` : ''}
+                            </div>
+                        </div>`;
+                });
+            } catch (err) {
+                list.innerHTML = '<div class="col-12 text-danger small text-center py-2">Lỗi khi tải khiếu nại.</div>';
+            }
+        }
+
+        async function isMealCheckedInForComplaint(mealDate) {
+            if (!mealDate) return false;
+            const monthKey = String(mealDate).slice(0, 7);
+
+            let details = {};
+            if (cachedMonthStatus && cachedMonthStatus.month === monthKey && cachedMonthStatus.details) {
+                details = cachedMonthStatus.details || {};
+            } else {
+                try {
+                    const r = await fetchJsonSafe(`api/get_month_status.php?month=${encodeURIComponent(monthKey)}`);
+                    details = (r && r.details) ? r.details : {};
+                    cachedMonthStatus = {
+                        month: monthKey,
+                        data: (r && r.data) ? r.data : {},
+                        details
+                    };
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            const row = details[mealDate] || null;
+            return !!(row && row.status === 'checked_in');
+        }
+
+        document.getElementById('complaintForm')?.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const complaintDateEl = document.getElementById('complaintDate');
+            const complaintTypeEl = document.getElementById('complaintType');
+            const complaintContentEl = document.getElementById('complaintContent');
+            const mealDate = complaintDateEl ? complaintDateEl.value : '';
+            const complaintType = complaintTypeEl ? complaintTypeEl.value : '';
+            const content = complaintContentEl ? complaintContentEl.value.trim() : '';
+            const imageInput = document.getElementById('complaintImages');
+            const files = Array.from((imageInput && imageInput.files) ? imageInput.files : []);
+            const msg = document.getElementById('complaintMsg');
+
+            const imageError = validateComplaintImageFiles(files);
+            if (imageError) {
+                msg.innerHTML = `<span class="text-danger">${escapeHtml(imageError)}</span>`;
+                return;
+            }
+
+            const checkedIn = await isMealCheckedInForComplaint(mealDate);
+            if (!checkedIn) {
+                msg.innerHTML = '<span class="text-danger">Chỉ được gửi khiếu nại cho ngày đã xác nhận check-in.</span>';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('meal_date', mealDate);
+            formData.append('complaint_type', complaintType);
+            formData.append('content', content);
+            files.forEach((f) => formData.append('complaint_images[]', f));
+            msg.innerHTML = '<span class="text-muted">Đang gửi...</span>';
+
+            try {
+                const res = await fetch('api/submit_complaint.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const r = await res.json();
+
+                if (r.status === 'success') {
+                    msg.innerHTML = '<span class="text-success">Gửi khiếu nại thành công.</span>';
+                    this.reset();
+                    clearComplaintPreview();
+                    loadComplaints();
+                    complaintLoaded = true;
+                } else {
+                    msg.innerHTML = `<span class="text-danger">${escapeHtml(r.message)}</span>`;
+                }
+            } catch (err) {
+                msg.innerHTML = '<span class="text-danger">Lỗi hệ thống khi gửi khiếu nại.</span>';
+            }
+        });
+
+        document.getElementById('complaintImages')?.addEventListener('change', function () {
+            const msg = document.getElementById('complaintMsg');
+            const files = Array.from(this.files || []);
+            const imageError = validateComplaintImageFiles(files);
+            if (imageError) {
+                clearComplaintPreview();
+                this.value = '';
+                if (msg) msg.innerHTML = `<span class="text-danger">${escapeHtml(imageError)}</span>`;
+                return;
+            }
+            if (msg) msg.innerHTML = '';
+            renderComplaintPreview(files);
+        });
+
+        document.getElementById('complaintList')?.addEventListener('click', function (e) {
+            const target = e.target;
+            if (!(target instanceof HTMLImageElement)) return;
+            if (!target.classList.contains('complaint-thumb')) return;
+            const full = target.getAttribute('data-full') || target.getAttribute('src') || '';
+            const viewer = document.getElementById('complaintImageModalPreview');
+            if (!viewer || !full || !complaintImageModal) return;
+            viewer.setAttribute('src', full);
+            complaintImageModal.show();
+        });
+
+        document.getElementById('complaintImagePreview')?.addEventListener('click', function (e) {
+            const target = e.target;
+            if (!(target instanceof HTMLImageElement)) return;
+            if (!target.classList.contains('complaint-thumb')) return;
+            const full = target.getAttribute('data-full') || target.getAttribute('src') || '';
+            const viewer = document.getElementById('complaintImageModalPreview');
+            if (!viewer || !full || !complaintImageModal) return;
+            viewer.setAttribute('src', full);
+            complaintImageModal.show();
+        });
+
+        async function toggleCalendarDate(date, newStatus, shift) {
+            // Use current selected shift if not provided
+            if (!shift) shift = selectedTomorrowShift || 'lunch';
+
+            // For cancel in quick calendar: always resolve to the actually registered shift(s)
+            if (newStatus === 0) {
+                const registeredShifts = await resolveRegisteredShiftForDate(date);
+                if (registeredShifts === 'both') {
+                    shift = 'both';
+                } else if (registeredShifts === 'lunch' || registeredShifts === 'dinner') {
+                    shift = registeredShifts;
+                } else {
+                    showToast('Chưa đăng ký suất ăn ngày này', 'warning');
+                    return;
+                }
+            }
+            
+            // If 'both' shift, handle separately for register, but for cancel still need both
+            if (shift === 'both') {
+                if (newStatus === 1) {
+                    // Register both shifts - WITH confirmation for calendar quick register
+                    const shiftDisplay = 'cả ngày';
+                    const action = 'đăng ký';
+                    let detailMsg = `Bạn có chắc muốn ${action} ${shiftDisplay} ngày ${date}?`;
+                    
+                    const confirmed = await systemConfirm({
+                        title: 'Xác nhận',
+                        message: detailMsg,
+                        okText: 'Đăng ký',
+                        cancelText: 'Thoát',
+                        variant: 'success'
+                    });
+                    if (!confirmed) return;
+                    
+                    try {
+                        // Register lunch
+                        const rLunch = await fetchJsonSafe('api/toggle_meal.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: 1, date: date, meal_type: 'lunch' })
+                        });
+                        
+                        if (rLunch.status !== 'success') {
+                            showToast('Lỗi đăng ký ca trưa: ' + rLunch.message, 'danger');
+                            return;
+                        }
+                        
+                        // Register dinner
+                        const rDinner = await fetchJsonSafe('api/toggle_meal.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: 1, date: date, meal_type: 'dinner' })
+                        });
+                        
+                        if (rDinner.status !== 'success') {
+                            showToast('Lỗi đăng ký ca tối: ' + rDinner.message, 'danger');
+                            return;
+                        }
+                        
+                        cachedMealShifts[date] = 'both';
+                        loadCalendar(true);
+                        refreshMealStats();
+                        if (date === serverTomorrow) refreshProfileWidgets();
+                        showToast(`Cả ngày (Ca trưa + Ca tối) ngày ${date} - đăng ký thành công`, 'success');
+                    } catch (err) {
+                        showToast('Lỗi kết nối khi cập nhật lịch.', 'danger');
+                    }
+                } else {
+                    // Cancel - auto-cancel based on what was actually registered
+                    const registeredShifts = cachedMealShifts[date];
+                    let shiftsToCancel = [];
+                    
+                    if (registeredShifts === 'both') {
+                        // Both shifts registered - cancel both automatically
+                        shiftsToCancel = ['lunch', 'dinner'];
+                    } else if (registeredShifts === 'lunch' || registeredShifts === 'dinner') {
+                        // One shift registered - cancel it automatically
+                        shiftsToCancel = [registeredShifts];
+                    } else {
+                        // Nothing registered
+                        showToast('Chưa đăng ký suất ăn ngày này', 'warning');
+                        return;
+                    }
+
+                    const cancelTargetLabel = shiftsToCancel.length === 2 ? 'cả ngày' : (shiftsToCancel[0] === 'lunch' ? 'ca Trưa' : 'ca Tối');
+                    const confirmed = await systemConfirm({
+                        title: 'Xác nhận',
+                        message: `Bạn có chắc muốn hủy ${cancelTargetLabel} ngày ${date}?`,
+                        okText: 'Hủy',
+                        cancelText: 'Thoát',
+                        variant: 'danger'
+                    });
+                    if (!confirmed) return;
+                    
+                    try {
+                        const errors = [];
+                        const successes = [];
+                        
+                        // Process each shift to cancel
+                        for (const shiftType of shiftsToCancel) {
+                            const r = await fetchJsonSafe('api/toggle_meal.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: 0, date: date, meal_type: shiftType })
+                            });
+                            
+                            if (r.status === 'success') {
+                                successes.push(shiftType === 'lunch' ? 'Ca Trưa' : 'Ca Tối');
+                            } else {
+                                errors.push(`${shiftType === 'lunch' ? 'Ca Trưa' : 'Ca Tối'}: ${r.message}`);
+                            }
+                        }
+                        
+                        // Show results
+                        let toastMsg = '';
+                        if (successes.length > 0) {
+                            toastMsg = `Hủy ${successes.join(' + ')} ngày ${date} thành công`;
+                            if (errors.length > 0) {
+                                toastMsg += ` (Lỗi: ${errors[0].split(':')[0]})`;
+                            }
+                            showToast(toastMsg, successes.length > 0 ? 'warning' : 'danger');
+                        } else {
+                            showToast('Hủy không thành công: ' + errors[0], 'danger');
+                            return;
+                        }
+
+                        const successShiftKeys = successes.map(s => s === 'Ca Trưa' ? 'lunch' : 'dinner');
+                        const remainingShifts = shiftsToCancel.filter(s => !successShiftKeys.includes(s));
+
+                        if (remainingShifts.length === 0) {
+                            delete cachedMealShifts[date];
+                        } else if (remainingShifts.length === 2) {
+                            cachedMealShifts[date] = 'both';
+                        } else {
+                            cachedMealShifts[date] = remainingShifts[0];
+                        }
+
+                        loadCalendar(true);
+                        refreshMealStats();
+                        if (date === serverTomorrow) refreshProfileWidgets();
+                    } catch (err) {
+                        showToast('Lỗi kết nối khi cập nhật lịch.', 'danger');
+                    }
+                }
+                return;
+            }
+            
+            // Get shift display name for single shift
+            const shiftNames = { lunch: 'Trưa', dinner: 'Tối' };
+            const shiftDisplay = shiftNames[shift] || shift;
+            const action = newStatus === 1 ? 'đăng ký' : 'hủy';
+            
+            // Prepare detailed message for clarity
+            let detailMsg = `Bạn có chắc muốn ${action} ca ${shiftDisplay} ngày ${date}?`;
+            if (newStatus === 0) {
+                detailMsg += '\n\n⚠️ Lưu ý: Chỉ hủy được nếu bạn đã đăng ký ca này.';
+            }
+            
+            // Show confirmation popup
+            const confirmed = await systemConfirm({
+                title: 'Xác nhận',
+                message: detailMsg,
+                okText: newStatus === 1 ? 'Đăng ký' : 'Hủy',
+                cancelText: 'Thoát',
+                variant: newStatus === 1 ? 'success' : 'danger'
+            });
+            if (!confirmed) return;
+            
+            try {
+                const r = await fetchJsonSafe('api/toggle_meal.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus, date: date, meal_type: shift })
+                });
+                if (r.status === 'success') {
+                    // Track which shift was registered for this date
+                    if (newStatus === 1) {
+                        cachedMealShifts[date] = shift;
+                    } else {
+                        delete cachedMealShifts[date];
+                    }
+                    loadCalendar(true);
+                    refreshMealStats();
+                    if (date === serverTomorrow) refreshProfileWidgets();
+                    // Show which shift was registered
+                    showToast(`Ca ${shiftDisplay} ngày ${date} - ${action} ${newStatus === 1 ? 'thành công' : 'hủy thành công'}`, newStatus === 1 ? 'success' : 'warning');
+                } else {
+                    showToast(r.message || 'Không cập nhật được lịch.', 'danger');
+                }
+            } catch (err) {
+                showToast('Lỗi kết nối khi cập nhật lịch.', 'danger');
+            }
+        }
+
+        function applyProfileData(s) {
+            const timestamp = new Date().getTime();
+            const userNameEl = document.getElementById('userName');
+            const studentIdEl = document.getElementById('studentId');
+            const userPhotoEl = document.getElementById('userPhoto');
+            const navAvatarEl = document.getElementById('navUserAvatar');
+
+            if (userNameEl) userNameEl.innerText = s.full_name;
+            if (studentIdEl) studentIdEl.innerText = 'Mã nhân viên: ' + s.student_id_no;
+            if (s.photo_path && userPhotoEl) userPhotoEl.src = s.photo_path + '?t=' + timestamp;
+            if (s.photo_path && navAvatarEl) navAvatarEl.src = s.photo_path + '?t=' + timestamp;
+
+            const pName = document.getElementById('p_name');
+            const pStudentId = document.getElementById('p_student_id');
+            const pRegNo = document.getElementById('p_reg_no');
+            const pDept = document.getElementById('p_dept');
+            const pHall = document.getElementById('p_hall');
+            const pEmail = document.getElementById('p_email');
+            const pDob = document.getElementById('p_dob');
+            const pBg = document.getElementById('p_bg');
+            const pGender = document.getElementById('p_gender');
+            const pFather = document.getElementById('p_father');
+            const pMother = document.getElementById('p_mother');
+            const pPermAddress = document.getElementById('p_perm_address');
+            const pPresAddress = document.getElementById('p_pres_address');
+            const pPhone = document.getElementById('p_phone');
+            const pPhoto = document.getElementById('p_photo');
+            const pIdCard = document.getElementById('p_id_card');
+
+            if (pName) pName.value = s.full_name || '';
+            if (pStudentId) pStudentId.value = s.student_id_no || '';
+            if (pRegNo) pRegNo.value = s.registration_no || '-';
+            if (pDept) pDept.value = s.department || '';
+            if (pHall) pHall.value = s.hall_name || '-';
+            if (pEmail) pEmail.value = s.email || 'Chưa có';
+            if (pDob) pDob.value = s.dob || '-';
+            if (pBg) pBg.value = s.blood_group || '-';
+            if (pGender) pGender.value = s.gender || '-';
+            if (pFather) pFather.value = s.father_name || '';
+            if (pMother) pMother.value = s.mother_name || '';
+            if (pPermAddress) pPermAddress.value = s.permanent_address || '';
+            if (pPresAddress) pPresAddress.value = s.present_address || s.address || '';
+            if (pPhone) pPhone.value = s.phone || '';
+
+            if (pPhoto) pPhoto.src = s.photo_path ? (s.photo_path + '?t=' + timestamp) : 'assets/img/profile-placeholder.svg';
+            if (pIdCard) pIdCard.src = s.id_card_path || 'assets/img/id-card-placeholder.svg';
+        }
+
+        function renderNoticesFromInit(payload) {
+            const list = document.getElementById('noticeDropdownList');
+            const emptyState = document.getElementById('noticeDropdownEmpty');
+            const badge = document.getElementById('noticeBellBadge');
+            if (!list || !emptyState || !badge) return;
+
+            const systemNotices = Array.isArray(payload.system_notifications) ? payload.system_notifications : [];
+            const sharedNotices = Array.isArray(payload.notices) ? payload.notices : [];
+
+            const notices = [
+                ...systemNotices.map((n) => ({ ...n, variant: 'danger', icon: 'bi-shield-exclamation', label: 'Cảnh báo' })),
+                ...sharedNotices.map((n) => ({ ...n, variant: 'primary', icon: 'bi-megaphone-fill', label: 'Thông báo' }))
+            ];
+
+            list.innerHTML = '';
+
+            if (notices.length === 0) {
+                emptyState.classList.remove('d-none');
+                badge.classList.add('d-none');
+                return 0;
+            }
+
+            emptyState.classList.add('d-none');
+            badge.textContent = notices.length;
+            badge.classList.remove('d-none');
+
+            notices.forEach((n) => {
+                list.innerHTML += `
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="text-${escapeHtml(n.variant)} mt-1"><i class="bi ${escapeHtml(n.icon)}"></i></span>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="fw-semibold text-dark">${escapeHtml(n.title)}</div>
+                                    <span class="badge bg-light text-${escapeHtml(n.variant)}">${escapeHtml(n.label)}</span>
+                                </div>
+                                <div class="small text-muted mt-1">${escapeHtml(n.message)}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            return notices.length;
+        }
+
+        async function hydrateNoticesFallback() {
+            try {
+                const res = await fetchJsonSafe('api/get_notices.php');
+                if (res && res.status === 'success' && Array.isArray(res.data)) {
+                    const payload = { notices: res.data, system_notifications: [] };
+                    renderNoticesFromInit(payload);
+                }
+            } catch (_) { /* ignore */ }
+        }
+
+        async function loadDashboardInit() {
+            try {
+                const r = await fetchJsonSafe('api/dashboard_init.php');
+                if (r.status !== 'success') {
+                    throw new Error(r.message || 'Không thể tải dữ liệu khởi tạo dashboard.');
+                }
+
+                applyProfileData(r.profile || {});
+                globalDates = r.dates || {};
+                serverToday = (r.dates && r.dates.today) || '';
+                serverTomorrow = (r.dates && r.dates.tomorrow) || '';
+                if (r.cutoff) {
+                    cutoffHour = Number(r.cutoff.hour ?? 8);
+                    cutoffMinute = Number(r.cutoff.minute ?? 0);
+                }
+                const cutoffLabel = document.getElementById('cutoffTimeLabel');
+                if (cutoffLabel) {
+                    cutoffLabel.textContent = `${String(cutoffHour).padStart(2, '0')}:${String(cutoffMinute).padStart(2, '0')}`;
+                }
+
+                if (serverTomorrow) {
+                    const dateTomorrowEl = document.getElementById('dateTomorrow');
+                    if (dateTomorrowEl) dateTomorrowEl.innerText = serverTomorrow;
+                    const regDateEl = document.getElementById('regDate');
+                    if (regDateEl) {
+                        regDateEl.min = serverTomorrow;
+                        regDateEl.value = serverTomorrow;
+                    }
+                    const menuViewDateEl = document.getElementById('menuViewDate');
+                    if (menuViewDateEl) menuViewDateEl.value = serverTomorrow;
+                }
+
+                applySelectedTomorrowShift();
+                updateTomorrowActionAvailability(isCutoffClosedNow());
+
+                setupToggle(null, 'statusTextTomorrow', Number(r.meal_tomorrow || 0), serverTomorrow);
+
+                const menu = r.menu_tomorrow || {};
+                const viewLunchEl = document.getElementById('viewLunch');
+                const viewDinnerEl = document.getElementById('viewDinner');
+                if (viewLunchEl) viewLunchEl.innerText = menu.lunch || '-';
+                if (viewDinnerEl) viewDinnerEl.innerText = menu.dinner || '-';
+                renderMenuSourceStatus(menu.approval_status || 'none');
+
+                const stats = r.month_stats || {};
+                renderMealStats(stats);
+
+                if (r.month_status) {
+                    const month = (r.dates && r.dates.month) || new Date().toISOString().slice(0, 7);
+                    cachedMonthStatus = {
+                        month,
+                        data: r.month_status.data || {},
+                        details: r.month_status.details || {}
+                    };
+                }
+
+                const noticeCount = renderNoticesFromInit(r);
+                if (noticeCount === 0) {
+                    hydrateNoticesFallback();
+                }
+                syncPlanCalendarFromInput();
+                loadMenuDetailBySelection();
+                initPlanCalendar();
+                loadCalendar(false);
+                startCutoffCountdown();  // START COUNTDOWN AFTER DATA LOADS
+                return true;
+            } catch (err) {
+                try {
+                    await refreshProfileWidgets();
+                    await loadCalendar(true);
+                    if (!serverToday || !serverTomorrow) {
+                        applyClientDateFallback();
+                    }
+                    renderMenuSourceStatus('none');
+                    loadMenuDetailBySelection();
+                    initPlanCalendar();
+                    startCutoffCountdown();  // START COUNTDOWN AFTER FALLBACK
+                    return true;
+                } catch (_) {
+                    applyClientDateFallback();
+                    setupToggle(null, 'statusTextTomorrow', 0, serverTomorrow);
+                    renderMenuSourceStatus('none');
+                    loadMenuDetailBySelection();
+                    initPlanCalendar();
+                    await loadCalendar(false);
+                    startCutoffCountdown();  // START COUNTDOWN AFTER FINAL FALLBACK
+                    showToast('Mất kết nối một phần, đang dùng dữ liệu dự phòng để đăng ký.', 'warning');
+                    return true;
+                }
+            }
+        }
+
+        bindIfExists('profileForm', 'submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            try {
+                const response = await fetch('api/update_profile.php', { method: 'POST', body: formData });
+                const result = await response.json();
+                if(result.status === 'success') {
+                    showToast('Cập nhật hồ sơ thành công.', 'success');
+                    refreshMealStats();
+                    if (window.bootstrap?.Modal) {
+                        const profileModalEl = document.getElementById('profileModal');
+                        const profileModal = profileModalEl ? window.bootstrap.Modal.getInstance(profileModalEl) : null;
+                        if (profileModal) profileModal.hide();
+                    }
+                    const pPhotoInput = document.getElementById('p_photo_input');
+                    if (pPhotoInput) pPhotoInput.value = '';
+                    loadDashboardInit();
+                } else { showToast(result.message || 'Không thể cập nhật hồ sơ.', 'danger'); }
+            } catch (error) { showToast('Đã xảy ra lỗi hệ thống.', 'danger'); }
+        });
+
+        async function loadTransactions() {
+            const t = document.getElementById('transactionBody');
+            if (!t) return;
+            transactionLoaded = true;
+            const res = await fetch('api/get_transactions.php');
+            const r = await res.json();
+            t.innerHTML = '';
+            if (r.status === 'success') {
+                r.data.forEach(d => {
+                    const color = d.type === 'debit' ? 'text-danger' : 'text-success';
+                    const createdAt = escapeHtml(d.created_at || '-');
+                    const description = escapeHtml(d.description || '-');
+                    const amount = escapeHtml(d.amount || 0);
+                    t.innerHTML += `<tr><td class="text-muted px-3">${createdAt}</td><td>${description}</td><td class="${color} fw-bold text-end px-3">${d.type == 'debit' ? '-' : '+'}${amount}</td></tr>`;
+                });
+            }
+        }
+
+        function bindIfExists(id, eventName, handler) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener(eventName, handler);
+            }
+        }
+
+        bindIfExists('regMode', 'change', function () {
+            const weekWrap = document.getElementById('weekPatternWrap');
+            if (weekWrap) weekWrap.style.display = this.value === 'week' ? 'block' : 'none';
+        });
+        bindIfExists('btnRegisterPlan', 'click', function () { applyPlanRegistration(1); });
+        bindIfExists('btnCancelPlan', 'click', function () { applyPlanRegistration(0); });
+        bindIfExists('btnQuickReg3Days', 'click', function () {
+            const dates = getQuickDates('next3');
+            const shiftEl = document.getElementById('regShift');
+            const shift = shiftEl ? shiftEl.value : 'lunch';
+            applyRegistrationForDates(1, dates, shift, 'regActionMsg');
+        });
+        bindIfExists('btnQuickRegWorkdays', 'click', function () {
+            const dates = getQuickDates('workdays');
+            const shiftEl = document.getElementById('regShift');
+            const shift = shiftEl ? shiftEl.value : 'lunch';
+            applyRegistrationForDates(1, dates, shift, 'regActionMsg');
+        });
+        bindIfExists('btnQuickCancel3Days', 'click', function () {
+            const dates = getQuickDates('next3');
+            const shiftEl = document.getElementById('regShift');
+            const shift = shiftEl ? shiftEl.value : 'lunch';
+            applyRegistrationForDates(0, dates, shift, 'regActionMsg');
+        });
+        bindIfExists('btnLoadMenuView', 'click', loadMenuDetailBySelection);
+        bindIfExists('menuViewShift', 'change', loadMenuDetailBySelection);
+        bindIfExists('menuViewDate', 'change', loadMenuDetailBySelection);
+        bindIfExists('regDate', 'change', syncPlanCalendarFromInput);
+        bindIfExists('planPrevMonth', 'click', function () {
+            if (!planCalCursor) return;
+            planCalCursor = new Date(planCalCursor.getFullYear(), planCalCursor.getMonth() - 1, 1);
+            renderPlanCalendar();
+        });
+        bindIfExists('planNextMonth', 'click', function () {
+            if (!planCalCursor) return;
+            planCalCursor = new Date(planCalCursor.getFullYear(), planCalCursor.getMonth() + 1, 1);
+            renderPlanCalendar();
+        });
+        bindIfExists('btnTomorrowRegister', 'click', registerTomorrowMeal);
+        bindIfExists('btnTomorrowCancel', 'click', cancelTomorrowMeal);
+
+        pollRealtimeAlerts();
+        setInterval(pollRealtimeAlerts, 15000);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                pollRealtimeAlerts();
+            }
+        });
+
+        function openEmployeeTab(tabName) {
+            const map = {
+                register: 'btn-tab-register',
+                history: 'btn-tab-history',
+                complaint: 'btn-tab-complaint',
+                'menu-dang-ky': 'btn-tab-register',
+                'menu-lich-su': 'btn-tab-history',
+                'menu-khieu-nai': 'btn-tab-complaint'
+            };
+
+            const btnId = map[tabName] || map.register;
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if (window.bootstrap?.Tab) {
+                window.bootstrap.Tab.getOrCreateInstance(btn).show();
+            } else {
+                btn.click();
+            }
+
+            ensureEmployeeTabDataLoadedByButtonId(btnId);
+        }
+
+        function ensureEmployeeTabDataLoadedByButtonId(btnId) {
+            if (btnId === 'btn-tab-history' && !historyLoaded) { loadMealHistory(); historyLoaded = true; }
+            if (btnId === 'btn-tab-complaint' && !complaintLoaded) { loadComplaints(); complaintLoaded = true; }
+        }
+
+        function handleEmployeeHashRoute() {
+            const hash = (window.location.hash || '').replace('#', '');
+            if (!hash) return;
+            openEmployeeTab(hash);
+        }
+
+        document.querySelectorAll('#employeeSidebarMenu button[data-bs-toggle="tab"]').forEach((btn) => {
+            btn.addEventListener('shown.bs.tab', function (e) {
+                const target = e.target.getAttribute('data-bs-target');
+                if (target === '#tab-register') window.location.hash = 'register';
+                if (target === '#tab-history') window.location.hash = 'history';
+                if (target === '#tab-complaint') window.location.hash = 'complaint';
+
+                if (target === '#tab-history' && !historyLoaded) {
+                    loadMealHistory();
+                    historyLoaded = true;
+                }
+                if (target === '#tab-complaint' && !complaintLoaded) {
+                    loadComplaints();
+                    complaintLoaded = true;
+                }
+
+                const btnId = e.target.getAttribute('id');
+                if (btnId) {
+                    ensureEmployeeTabDataLoadedByButtonId(btnId);
+                }
+            });
+        });
+
+        window.addEventListener('hashchange', handleEmployeeHashRoute);
+        document.addEventListener('DOMContentLoaded', handleEmployeeHashRoute);
+    </script>
+</body>
+</html>
+
